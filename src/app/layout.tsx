@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description: "AI-coordinated dormitory maintenance and asset intelligence.",
 };
 
-export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: "#0b1f3a" };
+export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: "#183247" };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (

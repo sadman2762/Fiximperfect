@@ -18,7 +18,7 @@ function layout(title: string, paragraphs: string[], cta?: { label: string; url:
 <h1 style="font-size:20px;margin:0 0 12px">${esc(title)}</h1>
 ${paragraphs.map((p) => `<p style="line-height:1.5">${esc(p)}</p>`).join("")}
 ${buttons}
-<p style="color:#64748b;font-size:12px;margin-top:24px">This is an automated message from your dormitory maintenance service. Links are personal — please do not forward them.</p>
+<p style="color:#68798a;font-size:12px;margin-top:24px">This is an automated message from your dormitory maintenance service. Links are personal — please do not forward them.</p>
 </body></html>`;
 }
 

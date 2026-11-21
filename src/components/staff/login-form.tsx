@@ -31,11 +31,9 @@ export function LoginForm({ showDemo }: { showDemo: boolean }) {
   return (
     <main className="grid min-h-dvh lg:grid-cols-[1fr_1.1fr]">
       {/* Brand panel */}
-      <section className="navy relative hidden overflow-hidden p-12 lg:flex lg:flex-col">
-        <div aria-hidden className="absolute -top-32 -right-24 size-[460px] rounded-full bg-[#0071e3]/25 blur-3xl" />
-        <div aria-hidden className="absolute -bottom-40 -left-20 size-[420px] rounded-full bg-[#13294b] blur-2xl" />
+      <section className="brand-band geo-on-green relative hidden overflow-hidden p-12 lg:flex lg:flex-col">
         <Link href="/" className="relative flex items-center gap-2.5">
-          <AppMark className="size-9 ring-white/20" />
+          <span className="grid size-9 place-items-center rounded-[28%] bg-white"><AppMark className="size-7" /></span>
           <Wordmark onDark className="text-[20px]" />
         </Link>
         <div className="relative mt-auto">
@@ -46,8 +44,8 @@ export function LoginForm({ showDemo }: { showDemo: boolean }) {
           </h2>
           <ul className="mt-8 space-y-3">
             {POINTS.map((p) => (
-              <li key={p} className="flex items-center gap-3 text-[15px] text-white/80">
-                <CheckCircle2 className="size-5 text-[#ffd700]" aria-hidden /> {p}
+              <li key={p} className="flex items-center gap-3 text-[15px] text-white/90">
+                <CheckCircle2 className="size-5 text-[#a6f0de]" aria-hidden /> {p}
               </li>
             ))}
           </ul>
@@ -62,7 +60,7 @@ export function LoginForm({ showDemo }: { showDemo: boolean }) {
             <Wordmark className="text-[20px]" />
           </div>
           <h1 className="text-[30px] font-bold tracking-[-0.03em]">Welcome back</h1>
-          <p className="mt-1.5 text-[15px] text-[#5f6672]">Sign in to the staff workspace.</p>
+          <p className="mt-1.5 text-[15px] text-[#5f7183]">Sign in to the staff workspace.</p>
 
           <form
             className="mt-8 space-y-4 p-6 surface"
@@ -81,13 +79,13 @@ export function LoginForm({ showDemo }: { showDemo: boolean }) {
             }}
           >
             <div className="space-y-1.5">
-              <Label htmlFor="email" className="text-[13px] text-[#0b1f3a]">
+              <Label htmlFor="email" className="text-[13px] text-[#183247]">
                 Email
               </Label>
               <Input id="email" type="email" autoComplete="username" required value={email} onChange={(e) => setEmail(e.target.value.trim())} placeholder="name@university.edu" />
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="password" className="text-[13px] text-[#0b1f3a]">
+              <Label htmlFor="password" className="text-[13px] text-[#183247]">
                 Password
               </Label>
               <Input id="password" type="password" autoComplete="current-password" required value={password} onChange={(e) => setPassword(e.target.value)} />
@@ -106,7 +104,7 @@ export function LoginForm({ showDemo }: { showDemo: boolean }) {
 
           {showDemo ? (
             <div className="mt-6 panel-blue p-4">
-              <p className="text-[13px] font-semibold text-[#0b1f3a]">Demo accounts — tap to fill in</p>
+              <p className="text-[13px] font-semibold text-[#183247]">Demo accounts — tap to fill in</p>
               <div className="mt-3 flex flex-wrap gap-2">
                 {DEMO_ACCOUNTS.map((a) => (
                   <button
@@ -119,22 +117,22 @@ export function LoginForm({ showDemo }: { showDemo: boolean }) {
                     }}
                     className={cn(
                       "rounded-full border px-3.5 py-1.5 text-[13px] font-medium transition-colors",
-                      email === a.email ? "border-[#0071e3] bg-[#0071e3] text-white" : "border-[#d3e5fb] bg-white text-[#0b1f3a] hover:border-[#0071e3]/50",
+                      email === a.email ? "border-[#00866a] bg-[#00866a] text-white" : "border-[#c4e6dc] bg-white text-[#183247] hover:border-[#00866a]/50",
                     )}
                   >
                     {a.label}
                   </button>
                 ))}
               </div>
-              <p className="mt-3 text-xs text-[#5f6672]">
-                Password <code className="rounded bg-white px-1.5 py-0.5 text-[#0b1f3a]">{DEMO_PASSWORD}</code>
+              <p className="mt-3 text-xs text-[#5f7183]">
+                Password <code className="rounded bg-white px-1.5 py-0.5 text-[#183247]">{DEMO_PASSWORD}</code>
               </p>
             </div>
           ) : null}
 
-          <p className="mt-8 text-[13px] text-[#5f6672]">
+          <p className="mt-8 text-[13px] text-[#5f7183]">
             Students don’t need an account.{" "}
-            <Link href="/#qr" className="font-medium text-[#0071e3] hover:text-[#005bb5]">
+            <Link href="/#qr" className="font-medium text-[#00866a] hover:text-[#006b55]">
               Scan a code to report a problem
             </Link>
           </p>

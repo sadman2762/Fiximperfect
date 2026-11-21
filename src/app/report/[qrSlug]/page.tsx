@@ -17,7 +17,7 @@ export default async function ReportPage({ params }: { params: Promise<{ qrSlug:
 
   return (
     <StudentShell emergencyAt={qr.location.qr_slug}>
-      <section className="rise text-center">
+      <section className="rise geo overflow-hidden rounded-xl border border-[#c4e6dc] px-5 pt-6 pb-5 text-center">
         <p className="eyebrow">Report a problem</p>
         <h1 className="mt-3 text-[38px] leading-none font-bold tracking-[-0.035em]">{placeName(qr.location)}</h1>
         {qr.location.room_number && qr.location.area_name !== placeName(qr.location) ? <p className="mt-1 text-[15px] text-muted-foreground">{qr.location.area_name}</p> : null}
@@ -25,20 +25,20 @@ export default async function ReportPage({ params }: { params: Promise<{ qrSlug:
           <MapPin className="size-4" aria-hidden />
           {qr.building.name} · Floor {qr.location.floor}
         </p>
-        <dl className="mx-auto mt-5 grid max-w-sm grid-cols-[1.7fr_0.8fr_1fr] overflow-hidden rounded-2xl border border-[#e1e5eb] bg-white text-left" aria-label="Location from the QR code">
+        <dl className="mx-auto mt-5 grid max-w-sm grid-cols-[1.7fr_0.8fr_1fr] overflow-hidden rounded-2xl border border-[#dde2e5] bg-white text-left" aria-label="Location from the QR code">
           {[
             ["Dormitory", qr.building.name],
             ["Floor", String(qr.location.floor)],
             [qr.location.room_number ? "Room" : "Area", qr.location.room_number ?? qr.location.area_name],
           ].map(([k, v], i) => (
-            <div key={k} className={i > 0 ? "border-l border-[#e1e5eb] px-3 py-2.5" : "px-3 py-2.5"}>
+            <div key={k} className={i > 0 ? "border-l border-[#dde2e5] px-3 py-2.5" : "px-3 py-2.5"}>
               <dt className="text-[11px] font-medium tracking-[0.04em] text-muted-foreground uppercase">{k}</dt>
-              <dd className="mt-0.5 text-[14px] leading-snug font-semibold break-words text-[#0b1f3a]">{v}</dd>
+              <dd className="mt-0.5 text-[14px] leading-snug font-semibold break-words text-[#183247]">{v}</dd>
             </div>
           ))}
         </dl>
-        <p className="mx-auto mt-3 inline-flex items-center gap-1.5 rounded-full border border-[#bbf7d0] bg-[#f0fdf4] px-3 py-1 text-xs text-[#15803d]">
-          <CheckCircle2 className="size-3.5 text-[#15803d]" aria-hidden />
+        <p className="mx-auto mt-3 inline-flex items-center gap-1.5 rounded-full border border-[#b9e3d6] bg-[#e6f4f0] px-3 py-1 text-xs text-[#006b55]">
+          <CheckCircle2 className="size-3.5 text-[#006b55]" aria-hidden />
           Location identified from the QR code · {qr.location.location_code}
         </p>
       </section>

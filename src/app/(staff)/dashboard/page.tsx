@@ -65,7 +65,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           {(emergencies as unknown as Emergency[]).map((e) => {
             const latest = [...e.emergency_alerts].sort((a, b) => b.escalation_attempt - a.escalation_attempt)[0];
             return (
-              <div key={e.id} className="flex flex-col gap-3 rounded-xl bg-gradient-to-br from-[#ff453a] to-[#d70015] p-5 text-white shadow-[0_16px_40px_-16px_rgba(215,0,21,0.65)] sm:flex-row sm:items-center">
+              <div key={e.id} className="flex flex-col gap-3 rounded-xl bg-[#dc2626] p-5 text-white sm:flex-row sm:items-center">
                 <ShieldAlert className="size-6 shrink-0" aria-hidden />
                 <div className="flex-1 text-sm">
                   <p className="font-semibold">

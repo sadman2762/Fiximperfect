@@ -32,7 +32,7 @@ export default async function EmergencyPage({ searchParams }: { searchParams: Pr
 
   return (
     <StudentShell hideEmergency>
-      <section className="rise overflow-hidden rounded-2xl bg-gradient-to-br from-[#dc2626] to-[#991b1b] p-5 text-white shadow-[0_16px_40px_-18px_rgba(220,38,38,0.8)]">
+      <section className="rise overflow-hidden rounded-2xl bg-[#dc2626] p-5 text-white">
         <p className="text-[12px] font-semibold tracking-[0.08em] uppercase opacity-90">Emergency</p>
         <h1 className="mt-1 text-[30px] leading-tight font-bold tracking-[-0.03em] text-white">Report an emergency</h1>
         <p className="mt-2 text-[14px] opacity-95">

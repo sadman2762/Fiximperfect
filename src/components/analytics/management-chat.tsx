@@ -52,7 +52,7 @@ export function ManagementChat() {
       {!turns.length ? (
         <div className="mt-3 flex flex-wrap gap-2">
           {SUGGESTIONS.map((s) => (
-            <button key={s} className="border border-[#e1e5eb] bg-[#f7f9fc] px-3 py-1.5 text-left text-xs text-[#0b1f3a] hover:border-[#0071e3]/50 hover:bg-[#e8f2ff]" onClick={() => ask(s)} disabled={busy}>
+            <button key={s} className="border border-[#dde2e5] bg-[#f8fafa] px-3 py-1.5 text-left text-xs text-[#183247] hover:border-[#00866a]/50 hover:bg-[#e6f4f0]" onClick={() => ask(s)} disabled={busy}>
               {s}
             </button>
           ))}

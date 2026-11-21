@@ -12,7 +12,7 @@ export function ProgressTracker({ progress }: { progress: Progress }) {
         const done = i < progress.step || (progress.tone === "done" && i === progress.step);
         const current = i === progress.step && progress.tone !== "done";
         const c = color(i);
-        const dashed = { backgroundImage: "linear-gradient(90deg,#c7c7cc 55%,transparent 0)", backgroundSize: "8px 2px", backgroundRepeat: "repeat-x", backgroundPosition: "center" };
+        const dashed = { backgroundImage: "linear-gradient(90deg,#c9d1d6 55%,transparent 0)", backgroundSize: "8px 2px", backgroundRepeat: "repeat-x", backgroundPosition: "center" };
         return (
           <li key={s.key} className="relative flex flex-1 flex-col items-center" aria-current={current ? "step" : undefined}>
             {i > 0 ? <span aria-hidden className="absolute top-[15px] right-1/2 left-0 h-[3px] -translate-y-1/2" style={i <= progress.step ? { background: c } : dashed} /> : null}
@@ -27,10 +27,10 @@ export function ProgressTracker({ progress }: { progress: Progress }) {
                   <span className="size-2.5 animate-pulse rounded-full motion-reduce:animate-none" style={{ background: c }} />
                 </span>
               ) : (
-                <span className="size-3.5 rounded-full border-2 border-[#c7c7cc] bg-white" />
+                <span className="size-3.5 rounded-full border-2 border-[#c9d1d6] bg-white" />
               )}
             </span>
-            <span className={cn("mt-2 px-0.5 text-center text-[11.5px] leading-tight", current ? "font-semibold text-[#0b1f3a]" : done ? "font-medium text-[#454b55]" : "text-[#8a929e]")}>{s.label}</span>
+            <span className={cn("mt-2 px-0.5 text-center text-[11.5px] leading-tight", current ? "font-semibold text-[#183247]" : done ? "font-medium text-[#3b4d5e]" : "text-[#8e9cab]")}>{s.label}</span>
           </li>
         );
       })}

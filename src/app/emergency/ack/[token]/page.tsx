@@ -39,7 +39,7 @@ export default async function AckPage({ params }: { params: Promise<{ token: str
           </p>
           {alert.tickets.safety_reason ? <p className="mt-3 text-sm">{alert.tickets.safety_reason}</p> : null}
           {alert.acknowledged_at ? (
-            <p className="mt-4 rounded-xl bg-[#f0fdf4] p-3 text-sm text-[#15803d]">Already acknowledged{alert.acknowledged_by ? ` by ${alert.acknowledged_by}` : ""}.</p>
+            <p className="mt-4 rounded-xl bg-[#e6f4f0] p-3 text-sm text-[#006b55]">Already acknowledged{alert.acknowledged_by ? ` by ${alert.acknowledged_by}` : ""}.</p>
           ) : (
             <AckButton token={token} />
           )}

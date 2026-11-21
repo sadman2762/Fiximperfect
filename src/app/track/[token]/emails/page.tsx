@@ -32,7 +32,7 @@ export default async function StudentEmailsPage({ params }: { params: Promise<{ 
 
   return (
     <StudentShell>
-      <Link href={`/track/${token}`} className="inline-flex items-center gap-1 text-[14px] text-[#0071e3] hover:underline">
+      <Link href={`/track/${token}`} className="inline-flex items-center gap-1 text-[14px] text-[#00866a] hover:underline">
         <ArrowLeft className="size-4" aria-hidden /> Back to tracking
       </Link>
       {!view || !enabled ? (
@@ -43,7 +43,7 @@ export default async function StudentEmailsPage({ params }: { params: Promise<{ 
       ) : (
         <>
           <div className="rise text-center">
-            <span className="mx-auto grid size-14 place-items-center rounded-xl bg-gradient-to-br from-[#2997ff] to-[#0071e3] text-white">
+            <span className="mx-auto grid size-14 place-items-center rounded-xl bg-[#00866a] text-white">
               <Inbox className="size-7" aria-hidden />
             </span>
             <h1 className="mt-4 text-[26px] font-bold tracking-[-0.03em]">Your e-mails</h1>
@@ -54,7 +54,7 @@ export default async function StudentEmailsPage({ params }: { params: Promise<{ 
           {(emails ?? []).map((m, i) => (
             <details key={m.id} open={i === 0} className="rise overflow-hidden rounded-xl bg-card surface">
               <summary className="flex cursor-pointer list-none items-center gap-3 px-4 py-3.5">
-                <span className="grid size-9 shrink-0 place-items-center rounded-full bg-[#0b1f3a] text-[13px] font-bold text-[#ffd60a]">F.</span>
+                <span className="grid size-9 shrink-0 place-items-center rounded-full bg-[#183247] text-[13px] font-bold text-[#08ba97]">F.</span>
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-[15px] font-semibold">{m.subject}</span>
                   <span className="block text-xs text-muted-foreground">
@@ -67,10 +67,10 @@ export default async function StudentEmailsPage({ params }: { params: Promise<{ 
                   title={m.subject ?? "E-mail"}
                   srcDoc={m.body_html}
                   sandbox="allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation"
-                  className="h-[860px] w-full border-t border-[#e1e5eb] bg-[#f7f9fc]"
+                  className="h-[860px] w-full border-t border-[#dde2e5] bg-[#f8fafa]"
                 />
               ) : (
-                <p className="border-t border-[#e1e5eb] px-4 py-3 text-sm text-muted-foreground">This e-mail was delivered to your inbox.</p>
+                <p className="border-t border-[#dde2e5] px-4 py-3 text-sm text-muted-foreground">This e-mail was delivered to your inbox.</p>
               )}
             </details>
           ))}

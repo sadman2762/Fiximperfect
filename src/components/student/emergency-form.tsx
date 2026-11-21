@@ -30,7 +30,7 @@ function Step({ n, title, children }: { n: number; title: string; children: Reac
   return (
     <section className="space-y-3">
       <h2 className="flex items-center gap-2 text-[16px] font-semibold">
-        <span className="grid size-6 place-items-center rounded-full bg-[#0b1f3a] text-[12px] font-bold text-white">{n}</span>
+        <span className="grid size-6 place-items-center rounded-full bg-[#183247] text-[12px] font-bold text-white">{n}</span>
         {title}
       </h2>
       {children}
@@ -68,20 +68,20 @@ export function EmergencyForm({ buildings, initialSlug }: { buildings: Emergency
           </div>
         </div>
         <div className="space-y-3 p-5 surface">
-          <p className="flex items-center gap-2 font-semibold text-[#0b1f3a]">
-            <CheckCircle2 className="size-5 text-[#16a34a]" aria-hidden /> Emergency report received
+          <p className="flex items-center gap-2 font-semibold text-[#183247]">
+            <CheckCircle2 className="size-5 text-[#00866a]" aria-hidden /> Emergency report received
           </p>
           <dl className="grid grid-cols-2 gap-3 text-[14px]">
             <div>
-              <dt className="text-[#5f6672]">Your report</dt>
+              <dt className="text-[#5f7183]">Your report</dt>
               <dd className="font-mono font-medium">{result.reportNumber}</dd>
             </div>
             <div>
-              <dt className="text-[#5f6672]">Ticket</dt>
+              <dt className="text-[#5f7183]">Ticket</dt>
               <dd className="font-mono font-medium">{result.ticketNumber}</dd>
             </div>
           </dl>
-          <p className="text-[13px] text-[#5f6672]">
+          <p className="text-[13px] text-[#5f7183]">
             {result.emailDelivery === "live" ? `We e-mailed a tracking link to ${result.emailedTo}.` : `A confirmation e-mail for ${result.emailedTo} was recorded (demo mode).`}
           </p>
           <a href={result.trackingUrl} className={cn(buttonVariants({ size: "lg" }), "w-full")}>
@@ -154,7 +154,7 @@ export function EmergencyForm({ buildings, initialSlug }: { buildings: Emergency
 
       <Step n={2} title="Where are you?">
         {location && initialSlug === location.slug ? (
-          <p className="flex items-center gap-2 rounded-xl border border-[#bbf7d0] bg-[#f0fdf4] px-3 py-2.5 text-[14px] text-[#15803d]">
+          <p className="flex items-center gap-2 rounded-xl border border-[#b9e3d6] bg-[#e6f4f0] px-3 py-2.5 text-[14px] text-[#006b55]">
             <MapPin className="size-4" aria-hidden /> {building?.name} · {location.label} (from the QR code)
           </p>
         ) : null}

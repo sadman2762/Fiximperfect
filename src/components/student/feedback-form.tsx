@@ -18,7 +18,7 @@ export function FeedbackForm({ token, initial }: { token: string; initial: "fixe
 
   if (state === "done") {
     return (
-      <p role="status" className="mt-4 rounded-xl bg-[#f0fdf4] p-3 text-sm text-[#15803d]">
+      <p role="status" className="mt-4 rounded-xl bg-[#e6f4f0] p-3 text-sm text-[#006b55]">
         {answer === "fixed" ? "Thank you for confirming the repair!" : "Thanks for telling us. The ticket has been reopened and the maintenance team has been notified."}
       </p>
     );
@@ -45,7 +45,7 @@ export function FeedbackForm({ token, initial }: { token: string; initial: "fixe
           role="radio"
           aria-checked={answer === "fixed"}
           onClick={() => setAnswer("fixed")}
-          className={cn("flex items-center justify-center gap-2 rounded-xl border p-3 text-sm font-medium", answer === "fixed" ? "border-[#16a34a] bg-[#f0fdf4] text-[#15803d]" : "hover:bg-muted")}
+          className={cn("flex items-center justify-center gap-2 rounded-xl border p-3 text-sm font-medium", answer === "fixed" ? "border-[#00866a] bg-[#e6f4f0] text-[#006b55]" : "hover:bg-muted")}
         >
           <CheckCircle2 className="size-5" aria-hidden /> Yes, fixed
         </button>

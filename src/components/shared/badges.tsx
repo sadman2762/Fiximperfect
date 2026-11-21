@@ -7,16 +7,16 @@ import type { Priority, SafetyLevel, TicketStatus } from "@/types/domain";
 const pill = "inline-flex items-center gap-1 rounded-full border px-2.5 py-[3px] text-[12px] font-medium whitespace-nowrap";
 
 const TONE = {
-  slate: "border-[#e2e8f0] bg-[#f1f5f9] text-[#475569]", // Received  #64748B
-  blue: "border-[#cfe3fb] bg-[#e8f2ff] text-[#005bb5]", // Assigned  #0071E3
+  slate: "border-[#e2e8f0] bg-[#f1f5f9] text-[#475569]", // Received  #68798a
+  blue: "border-[#cfe3f7] bg-[#eef6fe] text-[#1f6fb8]", // Assigned  #3d8fd6
   amber: "border-[#fde3b6] bg-[#fff7ed] text-[#b45309]", // Being repaired #D97706
-  green: "border-[#c7ecd4] bg-[#f0fdf4] text-[#15803d]", // Fixed #16A34A
-  navy: "border-[#0b1f3a] bg-[#0b1f3a] text-white", // Confirmed #0B1F3A
-  indigo: "border-[#dfe3fd] bg-[#eef2ff] text-[#4338ca]",
+  green: "border-[#b9e3d6] bg-[#e6f4f0] text-[#006b55]", // Fixed #00866a
+  navy: "border-[#183247] bg-[#183247] text-white", // Confirmed #183247
+  indigo: "border-[#e4e0ff] bg-[#f1efff] text-[#5b4fd0]",
   red: "border-[#fbd5d5] bg-[#fef2f2] text-[#b91c1c]",
   solidRed: "border-[#dc2626] bg-[#dc2626] text-white",
   orange: "border-[#fed7aa] bg-[#fff7ed] text-[#c2410c]",
-  grey: "border-[#e1e5eb] bg-white text-[#454b55]",
+  grey: "border-[#dde2e5] bg-white text-[#3b4d5e]",
 };
 
 /** Priority uses the reserved status palette, always with icon + label. */

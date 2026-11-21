@@ -6,7 +6,7 @@ export function NativeSelect({ className, ...props }: React.ComponentProps<"sele
   return (
     <select
       className={cn(
-        "h-10 w-full min-w-0 appearance-none rounded-xl border border-[#e1e5eb] bg-white bg-[url(\"data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%2712%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%235f6672%27 stroke-width=%272.5%27 stroke-linecap=%27round%27%3E%3Cpath d=%27m6 9 6 6 6-6%27/%3E%3C/svg%3E\")] bg-[length:12px] bg-[right_12px_center] bg-no-repeat pr-8 pl-3.5 text-sm outline-none transition-colors focus-visible:border-[#0071e3] focus-visible:bg-white focus-visible:ring-4 focus-visible:ring-[#0071e3]/15 disabled:opacity-50",
+        "h-10 w-full min-w-0 appearance-none rounded-xl border border-[#dde2e5] bg-white bg-[url(\"data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%2712%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%235f6672%27 stroke-width=%272.5%27 stroke-linecap=%27round%27%3E%3Cpath d=%27m6 9 6 6 6-6%27/%3E%3C/svg%3E\")] bg-[length:12px] bg-[right_12px_center] bg-no-repeat pr-8 pl-3.5 text-sm outline-none transition-colors focus-visible:border-[#00866a] focus-visible:bg-white focus-visible:ring-4 focus-visible:ring-[#00866a]/15 disabled:opacity-50",
         className,
       )}
       {...props}
@@ -21,7 +21,7 @@ export function StatTile({ label, value, hint, tone }: { label: string; value: R
       {tone === "critical" ? <span aria-hidden className="absolute inset-y-3 left-0 w-[3px] rounded-r-full bg-[#dc2626]" /> : null}
       <p
         className={cn(
-          "mt-2 text-[28px] leading-none font-semibold tracking-[-0.03em] whitespace-nowrap text-[#0b1f3a] tabular-nums",
+          "mt-2 text-[clamp(1.375rem,1.9vw,1.75rem)] leading-none font-semibold tracking-[-0.03em] whitespace-nowrap text-[#183247] tabular-nums",
           tone === "critical" && "text-[#dc2626]",
           tone === "warning" && "text-[#b45309]",
         )}

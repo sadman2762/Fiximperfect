@@ -91,7 +91,7 @@ export default async function AssetPage({ params }: { params: Promise<{ id: stri
             {(tickets.data ?? []).map((t) => (
               <li key={t.id} className="flex flex-wrap items-center justify-between gap-2 py-2">
                 <div>
-                  <Link href={`/tickets/${t.id}`} className="font-mono text-xs text-[#0071e3] hover:underline">
+                  <Link href={`/tickets/${t.id}`} className="font-mono text-xs text-[#00866a] hover:underline">
                     {t.ticket_number}
                   </Link>{" "}
                   {t.title}

@@ -22,7 +22,7 @@ export default async function TrackPage({ params }: { params: Promise<{ token: s
         </div>
       )}
       <p className="text-center text-sm">
-        <Link href="/track" className="text-[#0071e3] underline-offset-4 hover:underline">
+        <Link href="/track" className="text-[#00866a] underline-offset-4 hover:underline">
           See all my reports
         </Link>
       </p>

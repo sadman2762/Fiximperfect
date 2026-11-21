@@ -34,7 +34,7 @@ export function TicketTable({
   return (
     <div className="overflow-x-auto rounded-xl bg-card surface">
       <table className="w-full min-w-[900px] text-sm">
-        <thead className="border-b border-[#e1e5eb]">
+        <thead className="border-b border-[#dde2e5]">
           <tr>
             <Th k="ticket_number">Issue</Th>
             <Th>Asset</Th>
@@ -48,11 +48,11 @@ export function TicketTable({
         </thead>
         <tbody>
           {rows.map((t) => (
-            <tr key={t.id} className={`border-b last:border-0 hover:bg-[#f7f9fc] ${t.safety_level === "critical" && t.escalation_status !== "acknowledged" && !["resolved", "closed"].includes(t.status) ? "bg-[#fef2f2]" : ""}`}>
+            <tr key={t.id} className={`border-b last:border-0 hover:bg-[#f8fafa] ${t.safety_level === "critical" && t.escalation_status !== "acknowledged" && !["resolved", "closed"].includes(t.status) ? "bg-[#fef2f2]" : ""}`}>
               <td className="max-w-[380px] px-4 py-3.5">
                 <Link href={`/tickets/${t.id}`} className="group block">
                   <span className="font-mono text-[11px] text-muted-foreground">{t.ticket_number}</span>
-                  <span className="block text-[14px] leading-snug font-medium group-hover:text-[#005bb5]">{t.title}</span>
+                  <span className="block text-[14px] leading-snug font-medium group-hover:text-[#006b55]">{t.title}</span>
                   <span className="mt-0.5 block text-[12px] text-muted-foreground">
                     {t.buildings.name} · Floor {t.locations.floor} · {placeName(t.locations)}
                   </span>

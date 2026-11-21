@@ -160,7 +160,7 @@ export function EditToggle({ children, label = "Edit" }: { children: React.React
       </button>
     </div>
   ) : (
-    <button className="text-xs text-[#0071e3] hover:underline" onClick={() => setOpen(true)}>
+    <button className="text-xs text-[#00866a] hover:underline" onClick={() => setOpen(true)}>
       {label}
     </button>
   );

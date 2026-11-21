@@ -18,7 +18,7 @@ export default async function AssetsPage() {
       <PageHeader title="Assets" description="Failure frequency and repair spend per asset, computed from recorded tickets and expenses." />
       <div className="overflow-x-auto rounded-xl bg-card surface">
         <table className="w-full min-w-[900px] text-sm">
-          <thead className="border-b border-[#e1e5eb] text-left text-[12px] text-muted-foreground">
+          <thead className="border-b border-[#dde2e5] text-left text-[12px] text-muted-foreground">
             <tr>
               <th className="px-3 py-2 font-medium">Asset</th>
               <th className="px-3 py-2 font-medium">Building / location</th>
@@ -32,9 +32,9 @@ export default async function AssetsPage() {
           </thead>
           <tbody>
             {stats.map((s) => (
-              <tr key={s.asset_id} className="border-b last:border-0 hover:bg-[#f7f9fc]">
+              <tr key={s.asset_id} className="border-b last:border-0 hover:bg-[#f8fafa]">
                 <td className="px-4 py-3.5">
-                  <Link href={`/assets/${s.asset_id}`} className="font-medium text-[#0071e3] hover:underline">
+                  <Link href={`/assets/${s.asset_id}`} className="font-medium text-[#00866a] hover:underline">
                     {s.asset_name}
                   </Link>
                   <div className="font-mono text-xs text-muted-foreground">{s.asset_code}</div>

@@ -29,7 +29,7 @@ function Confidence({ value }: { value: number }) {
   return (
     <span className="inline-flex items-center gap-2">
       <span className="h-1 w-20 overflow-hidden bg-white/10" aria-hidden>
-        <span className="block h-full bg-[#0071e3]" style={{ width: `${pct}%` }} />
+        <span className="block h-full bg-[#00866a]" style={{ width: `${pct}%` }} />
       </span>
       <span className="text-xs tabular-nums">{pct}%</span>
     </span>
@@ -38,7 +38,7 @@ function Confidence({ value }: { value: number }) {
 
 function Section({ icon: Icon, title, children }: { icon: typeof Bot; title: string; children: React.ReactNode }) {
   return (
-    <div className="border border-[#e1e5eb] bg-[#f7f9fc] p-3.5">
+    <div className="border border-[#dde2e5] bg-[#f8fafa] p-3.5">
       <p className="mb-2 flex items-center gap-1.5 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
         <Icon className="size-3.5" aria-hidden /> {title}
       </p>

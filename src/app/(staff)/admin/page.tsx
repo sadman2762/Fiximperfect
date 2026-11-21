@@ -86,9 +86,9 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
             Demo accounts: {DEMO_STAFF.map((s) => `${s.email} (${s.role})`).join(" · ")}
           </div>
           <div className="mt-2 text-xs">
-            Student QR pages: <Link className="text-[#0071e3] underline" href="/report/kossuth-b-floor2-laundry">Kossuth B laundry room</Link> ·{" "}
-            <Link className="text-[#0071e3] underline" href="/report/kossuth-b-room-204">Kossuth B room 204</Link> ·{" "}
-            <Link className="text-[#0071e3] underline" href="/report/kossuth-b-floor1-corridor">Kossuth B corridor</Link>
+            Student QR pages: <Link className="text-[#00866a] underline" href="/report/kossuth-b-floor2-laundry">Kossuth B laundry room</Link> ·{" "}
+            <Link className="text-[#00866a] underline" href="/report/kossuth-b-room-204">Kossuth B room 204</Link> ·{" "}
+            <Link className="text-[#00866a] underline" href="/report/kossuth-b-floor1-corridor">Kossuth B corridor</Link>
           </div>
         </Box>
       </div>
@@ -138,7 +138,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
                             <span className="font-mono text-xs text-muted-foreground">{l.location_code}</span>
                           </span>
                           <span className="flex items-center gap-3 text-xs">
-                            <Link className="text-[#0071e3] underline" href={`/admin?tab=qr#qr-${l.qr_slug}`}>QR code</Link>
+                            <Link className="text-[#00866a] underline" href={`/admin?tab=qr#qr-${l.qr_slug}`}>QR code</Link>
                             <DeleteButton endpoint="/api/admin/locations" id={l.id} />
                           </span>
                         </div>
@@ -191,7 +191,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
               <li key={a.id} className="py-2">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <span>
-                    <Link href={`/assets/${a.id}`} className="font-medium text-[#0071e3] hover:underline">{a.asset_name}</Link>{" "}
+                    <Link href={`/assets/${a.id}`} className="font-medium text-[#00866a] hover:underline">{a.asset_name}</Link>{" "}
                     <span className="font-mono text-xs text-muted-foreground">{a.asset_code}</span> · {a.category} · {lOpts.find((o) => o.value === a.location_id)?.label ?? "—"} · replacement {a.replacement_cost ?? "—"} {a.currency} · {a.operational_status}
                   </span>
                   <span className="flex gap-3">
@@ -226,19 +226,19 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
         <p className="mb-3 text-xs text-muted-foreground">
           Each code opens the report page for its location. Students then say what is wrong (washer, fridge, heating…), so one code covers all the equipment in the room.
           Codes are permanent: renaming the room or replacing equipment does not change them.{" "}
-          <Link href="/admin/qr-labels" className="text-[#0071e3] underline">Open printable label sheet</Link>
+          <Link href="/admin/qr-labels" className="text-[#00866a] underline">Open printable label sheet</Link>
         </p>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
           {items.map((i, idx) => (
-            <div key={i.slug} id={`qr-${i.slug}`} className="scroll-mt-24 rounded-xl border p-2 text-center target:border-[#0071e3] target:ring-4 target:ring-[#0071e3]/20">
+            <div key={i.slug} id={`qr-${i.slug}`} className="scroll-mt-24 rounded-xl border p-2 text-center target:border-[#00866a] target:ring-4 target:ring-[#00866a]/20">
               <div className="mx-auto w-28" dangerouslySetInnerHTML={{ __html: svgs[idx] }} />
               <p className="mt-1 text-xs font-medium">{i.title}</p>
               <p className="text-[11px] text-muted-foreground">{i.sub}</p>
               <p className="font-mono text-[10px] text-muted-foreground">{i.code}</p>
               <div className="mt-1 flex justify-center gap-2 text-[11px]">
-                <a className="text-[#0071e3] underline" href={`/api/qr/${i.slug}?format=png`}>PNG</a>
-                <a className="text-[#0071e3] underline" href={`/api/qr/${i.slug}`} target="_blank" rel="noreferrer">SVG</a>
-                <Link className="text-[#0071e3] underline" href={`/report/${i.slug}`}>Preview</Link>
+                <a className="text-[#00866a] underline" href={`/api/qr/${i.slug}?format=png`}>PNG</a>
+                <a className="text-[#00866a] underline" href={`/api/qr/${i.slug}`} target="_blank" rel="noreferrer">SVG</a>
+                <Link className="text-[#00866a] underline" href={`/report/${i.slug}`}>Preview</Link>
               </div>
             </div>
           ))}
@@ -454,11 +454,11 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
               {n.subject ? <p className="text-xs font-medium">{n.subject}</p> : null}
               {n.body_preview ? (
                 <details>
-                  <summary className="cursor-pointer text-xs text-[#0071e3]">Message</summary>
+                  <summary className="cursor-pointer text-xs text-[#00866a]">Message</summary>
                   <pre className="mt-1 text-xs whitespace-pre-wrap">
                     {(n.body_preview as string).split(/(https?:\/\/\S+)/g).map((part: string, i: number) =>
                       /^https?:\/\//.test(part) ? (
-                        <a key={i} href={part} className="text-[#0071e3] underline" target="_blank" rel="noreferrer">{part}</a>
+                        <a key={i} href={part} className="text-[#00866a] underline" target="_blank" rel="noreferrer">{part}</a>
                       ) : (
                         part
                       ),
@@ -468,8 +468,8 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
               ) : null}
               {n.body_html ? (
                 <details>
-                  <summary className="cursor-pointer text-xs text-[#0071e3]">Preview e-mail</summary>
-                  <iframe title={n.subject ?? "E-mail preview"} srcDoc={n.body_html} sandbox="allow-popups allow-popups-to-escape-sandbox" className="mt-2 h-[760px] w-full max-w-[640px] rounded-xl border border-[#e1e5eb] bg-[#f7f9fc]" />
+                  <summary className="cursor-pointer text-xs text-[#00866a]">Preview e-mail</summary>
+                  <iframe title={n.subject ?? "E-mail preview"} srcDoc={n.body_html} sandbox="allow-popups allow-popups-to-escape-sandbox" className="mt-2 h-[760px] w-full max-w-[640px] rounded-xl border border-[#dde2e5] bg-[#f8fafa]" />
                 </details>
               ) : null}
               {n.error_message ? <p className="text-xs text-destructive">{n.error_message}</p> : null}
@@ -497,9 +497,9 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
   return (
     <>
       <PageHeader title="Settings" description="Buildings, assets, QR codes, teams, staff, escalation and configuration." />
-      <nav aria-label="Admin sections" className="mb-6 flex w-fit max-w-full gap-1 overflow-x-auto border border-[#e1e5eb] bg-[#f1f3f6] p-1 text-[13px]">
+      <nav aria-label="Admin sections" className="mb-6 flex w-fit max-w-full gap-1 overflow-x-auto border border-[#dde2e5] bg-[#eef2f3] p-1 text-[13px]">
         {TABS.map(([k, label]) => (
-          <Link key={k} href={`/admin?tab=${k}`} aria-current={tab === k ? "page" : undefined} className={`shrink-0 px-3.5 py-1.5 transition-colors ${tab === k ? "bg-[#0071e3] font-medium text-white shadow-[0_0_18px_-4px_rgba(0,113,197,0.9)]" : "text-muted-foreground hover:text-foreground"}`}>
+          <Link key={k} href={`/admin?tab=${k}`} aria-current={tab === k ? "page" : undefined} className={`shrink-0 px-3.5 py-1.5 transition-colors ${tab === k ? "bg-[#00866a] font-medium text-white" : "text-muted-foreground hover:text-foreground"}`}>
             {label}
           </Link>
         ))}

@@ -29,7 +29,7 @@ export function HistoryRequestForm() {
         {state === "sending" ? "Sending…" : "Email me a link"}
       </Button>
       {message ? (
-        <p role="status" className={state === "error" ? "text-sm text-destructive" : "text-sm text-[#15803d]"}>
+        <p role="status" className={state === "error" ? "text-sm text-destructive" : "text-sm text-[#006b55]"}>
           {message}
         </p>
       ) : null}

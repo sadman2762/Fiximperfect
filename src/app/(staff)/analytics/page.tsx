@@ -57,9 +57,9 @@ export default async function AnalyticsPage({ searchParams }: { searchParams: Pr
         title="Insights"
         description="Operational and financial view. Every figure is computed in SQL from stored records."
         actions={
-          <nav aria-label="Time range" className="flex border border-[#e1e5eb] bg-[#f1f3f6] p-1 text-[13px]">
+          <nav aria-label="Time range" className="flex border border-[#dde2e5] bg-[#eef2f3] p-1 text-[13px]">
             {ranges.map((r) => (
-              <Link key={r.label} href={r.key ? `/analytics?range=${r.key}` : "/analytics"} aria-current={range === r.key ? "page" : undefined} className={`px-3.5 py-1 transition-colors ${range === r.key ? "bg-[#0071e3] font-medium text-white shadow-[0_0_18px_-4px_rgba(0,113,197,0.9)]" : "text-muted-foreground hover:text-foreground"}`}>
+              <Link key={r.label} href={r.key ? `/analytics?range=${r.key}` : "/analytics"} aria-current={range === r.key ? "page" : undefined} className={`px-3.5 py-1 transition-colors ${range === r.key ? "bg-[#00866a] font-medium text-white" : "text-muted-foreground hover:text-foreground"}`}>
                 {r.label}
               </Link>
             ))}
@@ -88,9 +88,9 @@ export default async function AnalyticsPage({ searchParams }: { searchParams: Pr
         {flagged.length ? (
           <ul className="mt-3 space-y-3">
             {flagged.map((a) => (
-              <li key={a.asset_id} className="rounded-xl bg-[#f7f9fc] p-4">
+              <li key={a.asset_id} className="rounded-xl bg-[#f8fafa] p-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <Link href={`/assets/${a.asset_id}`} className="font-medium text-[#0071e3] hover:underline">
+                  <Link href={`/assets/${a.asset_id}`} className="font-medium text-[#00866a] hover:underline">
                     {a.asset_name} · {a.building_name}
                   </Link>
                   <LevelBadge level={recommendationLevel(a)} />
@@ -98,7 +98,7 @@ export default async function AnalyticsPage({ searchParams }: { searchParams: Pr
                 <p className="mt-1 text-sm">{deterministicRecommendation(a)}</p>
                 <p className="mt-1 text-xs text-muted-foreground tabular-nums">
                   Age {a.age_years ?? "—"} y · {a.repair_count} repairs · repair ÷ replacement {a.repair_to_replacement_ratio ?? "—"}% ·{" "}
-                  <Link className="text-[#0071e3] underline" href={`/assets/${a.asset_id}`}>
+                  <Link className="text-[#00866a] underline" href={`/assets/${a.asset_id}`}>
                     view supporting records
                   </Link>
                 </p>

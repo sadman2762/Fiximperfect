@@ -94,7 +94,7 @@ export function ReportForm({ qrSlug }: { qrSlug: string }) {
     return (
       <section aria-live="polite" className="space-y-4">
         {result.safetyLevel === "critical" ? (
-          <div className="rise flex gap-3 rounded-xl bg-gradient-to-br from-[#ff453a] to-[#d70015] p-4 text-white shadow-[0_12px_30px_-12px_rgba(215,0,21,0.6)]">
+          <div className="rise flex gap-3 rounded-xl bg-[#dc2626] p-4 text-white">
             <ShieldAlert className="mt-0.5 size-5 shrink-0" aria-hidden />
             <div className="text-sm">
               <p className="font-semibold">Safety hazard detected — staff are being alerted now.</p>
@@ -111,7 +111,7 @@ export function ReportForm({ qrSlug }: { qrSlug: string }) {
           </div>
         ) : null}
         <div className="pt-4 text-center">
-          <span className="pop mx-auto grid size-20 place-items-center rounded-full bg-gradient-to-br from-[#30d158] to-[#248a3d] text-white shadow-[0_12px_30px_-10px_rgba(36,138,61,0.6)]">
+          <span className="pop mx-auto grid size-20 place-items-center rounded-full bg-[#00866a] text-white">
             <CheckCircle2 className="size-10" strokeWidth={2.2} aria-hidden />
           </span>
           <h2 className="rise rise-1 mt-5 text-[28px] font-bold tracking-[-0.03em]">Thanks — we’re on it.</h2>
@@ -122,7 +122,7 @@ export function ReportForm({ qrSlug }: { qrSlug: string }) {
           </p>
         </div>
 
-        <dl className="rise rise-2 divide-y divide-[#e1e5eb] overflow-hidden rounded-xl bg-card text-[15px] surface">
+        <dl className="rise rise-2 divide-y divide-[#dde2e5] overflow-hidden rounded-xl bg-card text-[15px] surface">
           {[
             ["Your report", <span key="r" className="font-mono text-[14px]">{result.reportNumber}</span>],
             ["Ticket", <span key="t" className="font-mono text-[14px]">{result.ticketNumber}</span>],
@@ -139,17 +139,17 @@ export function ReportForm({ qrSlug }: { qrSlug: string }) {
         </dl>
 
         <div className="rise rise-3 overflow-hidden rounded-xl bg-card surface">
-          <div className="flex items-start gap-3 bg-[#e8f2ff] px-4 py-3.5">
-            <Mail className="mt-0.5 size-5 shrink-0 text-[#0071e3]" aria-hidden />
+          <div className="flex items-start gap-3 bg-[#e6f4f0] px-4 py-3.5">
+            <Mail className="mt-0.5 size-5 shrink-0 text-[#00866a]" aria-hidden />
             <div className="min-w-0 text-[14px]">
-              <p className="font-semibold text-[#005bb5]">
+              <p className="font-semibold text-[#006b55]">
                 {result.emailDelivery === "live" ? "Confirmation e-mail sent" : "Confirmation e-mail ready"}
               </p>
-              <p className="truncate text-[#0b1f3a]/70">
+              <p className="truncate text-[#183247]/70">
                 {result.emailDelivery === "live" ? `Check ${result.emailedTo} — we'll e-mail you at every step.` : `Addressed to ${result.emailedTo}. Demo mode: e-mail delivery isn't connected.`}
               </p>
               {result.emailPreviewUrl ? (
-                <a href={result.emailPreviewUrl} className="mt-1 inline-block font-medium text-[#0071e3] hover:underline">
+                <a href={result.emailPreviewUrl} className="mt-1 inline-block font-medium text-[#00866a] hover:underline">
                   View the e-mail →
                 </a>
               ) : null}
@@ -230,7 +230,7 @@ export function ReportForm({ qrSlug }: { qrSlug: string }) {
           {EQUIPMENT_CATEGORIES.map((c) => (
             <label key={c.value} className="cursor-pointer">
               <input type="radio" value={c.value} {...register("equipmentCategory")} className="peer sr-only" />
-              <span className="inline-flex rounded-full border border-[#e1e5eb] bg-white px-3.5 py-2 text-[13px] font-medium text-[#0b1f3a] transition-colors peer-checked:border-[#0071e3] peer-checked:bg-[#e8f2ff] peer-checked:text-[#0071e3] peer-focus-visible:ring-4 peer-focus-visible:ring-[#0071e3]/25 hover:border-[#0071e3]/50">
+              <span className="inline-flex rounded-full border border-[#dde2e5] bg-white px-3.5 py-2 text-[13px] font-medium text-[#183247] transition-colors peer-checked:border-[#00866a] peer-checked:bg-[#e6f4f0] peer-checked:text-[#00866a] peer-focus-visible:ring-4 peer-focus-visible:ring-[#00866a]/25 hover:border-[#00866a]/50">
                 {c.label}
               </span>
             </label>
@@ -270,7 +270,7 @@ export function ReportForm({ qrSlug }: { qrSlug: string }) {
             </Button>
           </div>
         ) : (
-          <label className="flex cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl bg-[#f7f9fc] p-6 text-[14px] text-[#0071e3] transition-colors hover:bg-[#f1f3f6]">
+          <label className="flex cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl bg-[#f8fafa] p-6 text-[14px] text-[#00866a] transition-colors hover:bg-[#eef2f3]">
             <Camera className="size-7" strokeWidth={1.6} aria-hidden /> <span className="font-medium">Take or choose a photo</span>
             <span className="text-xs text-muted-foreground">JPEG, PNG, WebP or GIF · up to 5 MB</span>
             <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" capture="environment" className="sr-only" onChange={(e) => pickPhoto(e.target.files?.[0])} />
@@ -307,7 +307,7 @@ export function ReportForm({ qrSlug }: { qrSlug: string }) {
       <Button
         type="submit"
         size="lg"
-        className={cn("h-12 w-full text-[17px] font-semibold", isCritical && "bg-[#dc2626] shadow-[0_6px_16px_-8px_rgba(220,38,38,0.8)] hover:bg-[#b91c1c]")}
+        className={cn("h-12 w-full text-[17px] font-semibold", isCritical && "bg-[#dc2626] hover:bg-[#b91c1c]")}
         disabled={formState.isSubmitting}
       >
         {formState.isSubmitting ? (
