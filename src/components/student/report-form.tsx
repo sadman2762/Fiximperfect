@@ -10,6 +10,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { NativeSelect } from "@/components/shared/ui-bits";
+import { EMERGENCY_PRESETS } from "@/lib/safety/presets";
+import { cn } from "@/lib/utils";
 import { PriorityBadge, StatusBadge, AiModeBadge } from "@/components/shared/badges";
 import type { Priority, TicketStatus } from "@/types/domain";
 
@@ -49,7 +51,10 @@ export function ReportForm({ qrSlug, assetName, locationAssets }: { qrSlug: stri
   const [serverError, setServerError] = useState<string | null>(null);
   const [result, setResult] = useState<Result | null>(null);
   const [copied, setCopied] = useState(false);
-  const { register, handleSubmit, formState } = useForm<FormValues>({ resolver: zodResolver(schema) });
+  const { register, handleSubmit, formState, setValue, setFocus } = useForm<FormValues>({ resolver: zodResolver(schema) });
+  const [emergency, setEmergency] = useState<string | null>(null);
+  const preset = EMERGENCY_PRESETS.find((p) => p.id === emergency) ?? null;
+  const isCritical = preset?.level === "critical";
 
   function pickPhoto(file: File | undefined) {
     setPhotoError(null);
@@ -176,6 +181,48 @@ export function ReportForm({ qrSlug, assetName, locationAssets }: { qrSlug: stri
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="rise rise-1 space-y-5 rounded-xl bg-card p-5 surface" noValidate>
+      <fieldset className="rounded-xl border border-[#fbd5d5] bg-[#fef2f2] p-4">
+        <legend className="sr-only">Report an emergency</legend>
+        <p className="flex items-center gap-2 text-[15px] font-semibold text-[#991b1b]">
+          <ShieldAlert className="size-5" aria-hidden /> Is someone in danger?
+        </p>
+        <p className="mt-1 text-[13px] text-[#7f1d1d]">
+          If anyone is hurt or in immediate danger, <strong>call 112 first</strong>. Then tap what is happening — staff are alerted straight away.
+        </p>
+        <div className="mt-3 grid grid-cols-2 gap-2">
+          {EMERGENCY_PRESETS.map((p) => (
+            <button
+              key={p.id}
+              type="button"
+              aria-pressed={emergency === p.id}
+              onClick={() => {
+                setEmergency(p.id);
+                setValue("description", p.text, { shouldValidate: true, shouldDirty: true });
+                setFocus("description");
+              }}
+              className={cn(
+                "flex items-center gap-2 rounded-xl border px-3 py-2.5 text-left text-[13px] font-medium transition-colors focus-visible:ring-4 focus-visible:ring-[#dc2626]/25 focus-visible:outline-none",
+                emergency === p.id
+                  ? "border-[#dc2626] bg-[#dc2626] text-white"
+                  : p.level === "critical"
+                    ? "border-[#fbd5d5] bg-white text-[#991b1b] hover:border-[#dc2626]/60"
+                    : "border-[#fde3b6] bg-white text-[#7a4300] hover:border-[#d97706]/60",
+              )}
+            >
+              <span aria-hidden className="text-[16px]">
+                {p.icon}
+              </span>
+              {p.label}
+            </button>
+          ))}
+        </div>
+        {preset ? (
+          <p className="mt-3 text-[12px] text-[#7f1d1d]">
+            We filled in the description for you — add any details (where exactly, is anyone hurt?) and send.
+          </p>
+        ) : null}
+      </fieldset>
+
       {locationAssets.length > 0 ? (
         <div className="space-y-1.5">
           <Label htmlFor="selectedAssetId">Which equipment? (optional)</Label>
@@ -251,11 +298,18 @@ export function ReportForm({ qrSlug, assetName, locationAssets }: { qrSlug: stri
         </p>
       ) : null}
 
-      <Button type="submit" size="lg" className="h-12 w-full text-[17px] font-semibold" disabled={formState.isSubmitting}>
+      <Button
+        type="submit"
+        size="lg"
+        className={cn("h-12 w-full text-[17px] font-semibold", isCritical && "bg-[#dc2626] shadow-[0_6px_16px_-8px_rgba(220,38,38,0.8)] hover:bg-[#b91c1c]")}
+        disabled={formState.isSubmitting}
+      >
         {formState.isSubmitting ? (
           <>
-            <Loader2 className="animate-spin" aria-hidden /> Analysing your report…
+            <Loader2 className="animate-spin" aria-hidden /> {isCritical ? "Alerting staff…" : "Analysing your report…"}
           </>
+        ) : isCritical ? (
+          "Send emergency report"
         ) : (
           "Send report"
         )}

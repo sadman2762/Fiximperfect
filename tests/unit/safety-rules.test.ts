@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { adviceFor, combineSafety, evaluateSafetyRules, maxPriority, priorityFloorForSafety } from "@/lib/safety/rules";
+import { EMERGENCY_PRESETS } from "@/lib/safety/presets";
 
 describe("deterministic safety rules", () => {
   it.each([
@@ -112,5 +113,11 @@ describe("new emergency types", () => {
   it("returns the most urgent advice first, and nothing for hazards without advice", () => {
     expect(adviceFor(["power_outage", "fire_or_smoke"])).toMatch(/leave the building/i);
     expect(adviceFor(["broken_glass"])).toBeNull();
+  });
+});
+
+describe("student emergency buttons", () => {
+  it.each(EMERGENCY_PRESETS.map((p) => [p.label, p] as const))("'%s' is escalated by the deterministic rules", (_label, p) => {
+    expect(evaluateSafetyRules(p.text).level).toBe(p.level);
   });
 });
