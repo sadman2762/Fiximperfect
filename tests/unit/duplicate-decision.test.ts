@@ -33,6 +33,7 @@ describe("duplicate threshold policy", () => {
 describe("mock duplicate fixture (demo scenario 1 wording)", () => {
   const candidate: DuplicateCandidate = {
     id: "1",
+    location_id: "laundry",
     ticket_number: "MNT-017",
     category: "Laundry Equipment",
     title: "Washer #3: Damaged door latch",
@@ -45,13 +46,26 @@ describe("mock duplicate fixture (demo scenario 1 wording)", () => {
     created_at: new Date().toISOString(),
     report_descriptions: ["The washing machine door is broken."],
   };
+  const report = (description: string, category: string, asset_code: string | null, issue: string, location_id = "laundry") => ({ description, category, asset_code, issue, location_id });
   it.each(["Washer number 3 will not close.", "The laundry machine door latch seems damaged."])("links '%s' with high confidence", (description) => {
-    const r = mockDuplicate({ description, category: "Laundry Equipment", asset_code: "WASHER-003", issue: "Damaged door latch" }, [candidate]);
+    const r = mockDuplicate(report(description, "Laundry Equipment", "WASHER-003", "Damaged door latch"), [candidate]);
     expect(r.matched_ticket).toBe("MNT-017");
     expect(r.confidence).toBeGreaterThanOrEqual(0.85);
   });
-  it("does not auto-link a different asset", () => {
-    const r = mockDuplicate({ description: "The fridge is warm", category: "Kitchen Appliances", asset_code: "FRIDGE-001", issue: "Not cooling properly" }, [candidate]);
+  it("links a report that names no machine when room, category and fault match", () => {
+    const r = mockDuplicate(report("The washing machine door is broken.", "Laundry Equipment", null, "Damaged door latch"), [candidate]);
+    expect(decideLink(r, t).decision).toBe("link");
+  });
+  it("does not merge a fridge problem with a washer problem in the same room", () => {
+    const r = mockDuplicate(report("The fridge is warm", "Kitchen Appliances", "FRIDGE-001", "Not cooling properly"), [candidate]);
     expect(decideLink(r, t).decision).toBe("new");
+  });
+  it("does not merge the same fault on a different machine", () => {
+    const r = mockDuplicate(report("Washer number 4 door latch is damaged", "Laundry Equipment", "WASHER-004", "Damaged door latch"), [candidate]);
+    expect(decideLink(r, t).decision).toBe("new");
+  });
+  it("does not merge the same fault in a different room", () => {
+    const r = mockDuplicate(report("The washing machine door latch is damaged.", "Laundry Equipment", null, "Damaged door latch", "other-room"), [candidate]);
+    expect(decideLink(r, t).decision).not.toBe("link");
   });
 });

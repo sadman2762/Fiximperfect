@@ -60,7 +60,7 @@ describe("student → caretaker → student journey over HTTP", () => {
     const results = [];
     for (const [i, [letter, text]] of students.entries()) {
       const r = await report(
-        { qrSlug: "kossuth-b-floor2-washer03", description: text, reporterName: `Student ${letter}`, reporterEmail: `e2e.${letter.toLowerCase()}@students.fiximperfect.example` },
+        { qrSlug: "kossuth-b-floor2-laundry", description: text, reporterName: `Student ${letter}`, reporterEmail: `e2e.${letter.toLowerCase()}@students.fiximperfect.example` },
         i === 0 ? tinyPng() : undefined,
       );
       expect(r.status).toBe(201);
@@ -149,7 +149,7 @@ describe("emergency flow over HTTP", () => {
 
 describe("public endpoint protections", () => {
   it("validates input and rate-limits repeated submissions from one email", async () => {
-    const invalid = await report({ qrSlug: "kossuth-b-floor2-washer03", description: "x", reporterName: "", reporterEmail: "nope" });
+    const invalid = await report({ qrSlug: "kossuth-b-floor2-laundry", description: "x", reporterName: "", reporterEmail: "nope" });
     expect(invalid.status).toBe(400);
     const unknown = await report({ qrSlug: "no-such-code", description: "Broken thing", reporterName: "Z", reporterEmail: "z@students.fiximperfect.example" });
     expect(unknown.status).toBe(404);

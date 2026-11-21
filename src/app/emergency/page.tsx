@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Phone } from "lucide-react";
 import { adminClient } from "@/lib/supabase/admin";
+import { floorAndPlace } from "@/lib/locations/label";
 import { StudentShell } from "@/components/student/student-shell";
 import { EmergencyForm, type EmergencyBuilding } from "@/components/student/emergency-form";
 
@@ -18,14 +19,14 @@ export default async function EmergencyPage({ searchParams }: { searchParams: Pr
   const db = adminClient();
   const [{ data: buildings }, { data: locations }] = await Promise.all([
     db.from("buildings").select("id, name").order("name"),
-    db.from("locations").select("building_id, floor, area_name, qr_slug").order("floor").order("area_name"),
+    db.from("locations").select("building_id, floor, area_name, room_number, qr_slug").order("floor").order("area_name"),
   ]);
   const options: EmergencyBuilding[] = (buildings ?? []).map((b) => ({
     id: b.id as string,
     name: b.name as string,
     locations: (locations ?? [])
       .filter((l) => l.building_id === b.id)
-      .map((l) => ({ slug: l.qr_slug as string, label: `Floor ${l.floor} · ${l.area_name}` })),
+      .map((l) => ({ slug: l.qr_slug as string, label: floorAndPlace(l) })),
   }));
   const initialSlug = typeof at === "string" && /^[a-z0-9-]{3,80}$/.test(at) ? at : null;
 

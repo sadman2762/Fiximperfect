@@ -15,16 +15,16 @@ import type { StaffProfile } from "@/types/domain";
  */
 
 export const SCENARIO_1_REPORTS = [
-  { name: "Student A (demo)", email: "student.a@students.fiximperfect.example", description: "The washing machine door is broken." },
-  { name: "Student B (demo)", email: "student.b@students.fiximperfect.example", description: "Washer number 3 will not close." },
-  { name: "Student C (demo)", email: "student.c@students.fiximperfect.example", description: "The laundry machine door latch seems damaged." },
+  { name: "Student A (demo)", email: "student.a@students.fiximperfect.example", description: "The washing machine door is broken.", equipmentCategory: "Laundry Equipment" },
+  { name: "Student B (demo)", email: "student.b@students.fiximperfect.example", description: "Washer number 3 will not close.", equipmentCategory: null },
+  { name: "Student C (demo)", email: "student.c@students.fiximperfect.example", description: "The laundry machine door latch seems damaged.", equipmentCategory: "Laundry Equipment" },
 ];
 
 export async function scenarioDuplicateDetection() {
   const results: SubmitReportResult[] = [];
   for (const r of SCENARIO_1_REPORTS) {
     results.push(
-      await submitReport({ qrSlug: "kossuth-b-floor2-washer03", description: r.description, reporterName: r.name, reporterEmail: r.email, isDemo: true }),
+      await submitReport({ qrSlug: "kossuth-b-floor2-laundry", equipmentCategory: r.equipmentCategory, description: r.description, reporterName: r.name, reporterEmail: r.email, isDemo: true }),
     );
   }
   const ticketIds = [...new Set(results.map((r) => r.ticketId))];
@@ -96,8 +96,9 @@ export async function scenarioResolutionVerification(ticketId?: string) {
   if (!id) {
     const { data } = await db
       .from("tickets")
-      .select("id, assets!inner(asset_code)")
-      .eq("assets.asset_code", "WASHER-003")
+      .select("id, locations!inner(qr_slug)")
+      .eq("locations.qr_slug", "kossuth-b-floor2-laundry")
+      .eq("category", "Laundry Equipment")
       .not("status", "in", "(closed)")
       .order("created_at", { ascending: false })
       .limit(1)

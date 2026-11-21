@@ -12,6 +12,7 @@ import { AssignmentControls, CostForm, DuplicateReviewControls, NoteForm, Priori
 import { AcknowledgeButton } from "@/components/tickets/acknowledge-button";
 import { LiveRefresh } from "@/components/dashboard/live-refresh";
 import type { TicketRow } from "@/types/domain";
+import { placeName } from "@/lib/locations/label";
 
 export const metadata: Metadata = { title: "Ticket" };
 
@@ -61,13 +62,13 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
   const db = await sessionClient();
   const { data: t } = await db
     .from("tickets")
-    .select("*, buildings(name), locations(area_name, floor), assets(id, asset_name, asset_code, currency), maintenance_teams(team_name), profiles:assigned_to(full_name)")
+    .select("*, buildings(name), locations(area_name, floor, room_number), assets(id, asset_name, asset_code, currency), maintenance_teams(team_name), profiles:assigned_to(full_name)")
     .eq("id", id)
     .maybeSingle();
   if (!t) notFound();
   const ticket = t as TicketRow & {
     buildings: { name: string };
-    locations: { area_name: string; floor: number };
+    locations: { area_name: string; floor: number; room_number: string | null };
     assets: { id: string; asset_name: string; asset_code: string; currency: string } | null;
     maintenance_teams: { team_name: string } | null;
     profiles: { full_name: string } | null;
@@ -114,7 +115,7 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
             <AiModeBadge mode={ticket.ai_mode} />
             <span className="inline-flex items-center gap-1">
               <MapPin className="size-3.5" aria-hidden />
-              {ticket.buildings.name}, floor {ticket.locations.floor}, {ticket.locations.area_name}
+              {ticket.buildings.name} · Floor {ticket.locations.floor} · {placeName(ticket.locations)}
             </span>
             {ticket.assets ? (
               <Link href={`/assets/${ticket.assets.id}`} className="text-[#0071e3] hover:underline">

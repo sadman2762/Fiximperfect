@@ -10,6 +10,7 @@ import { EntityForm, DeleteButton, EditToggle, type Field } from "@/components/a
 import { DemoControls } from "@/components/admin/demo-controls";
 import { SETTING_BOUNDS, loadSettings } from "@/lib/settings";
 import { DEMO_PASSWORD, DEMO_STAFF } from "@/lib/demo/seed";
+import { floorAndPlace, placeName } from "@/lib/locations/label";
 
 export const metadata: Metadata = { title: "Administration" };
 
@@ -54,12 +55,12 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
   const db = await sessionClient();
   const [{ data: buildings }, { data: locations }, { data: teams }, { data: categories }] = await Promise.all([
     db.from("buildings").select("id, name, code, address, is_demo").order("name"),
-    db.from("locations").select("id, building_id, floor, area_name, qr_slug, location_type").order("floor"),
+    db.from("locations").select("id, building_id, floor, area_name, room_number, location_code, qr_slug, location_type").order("floor").order("area_name"),
     db.from("maintenance_teams").select("id, team_name, description, responsible_categories, is_manual_review_queue").order("team_name"),
     db.from("categories").select("id, name, description, default_team_id, default_priority").order("name"),
   ]);
   const bOpts = (buildings ?? []).map((b) => ({ value: b.id, label: b.name }));
-  const lOpts = (locations ?? []).map((l) => ({ value: l.id, label: `${(buildings ?? []).find((b) => b.id === l.building_id)?.code} · F${l.floor} ${l.area_name}` }));
+  const lOpts = (locations ?? []).map((l) => ({ value: l.id, label: `${(buildings ?? []).find((b) => b.id === l.building_id)?.code} · ${floorAndPlace(l)}` }));
   const tOpts = (teams ?? []).map((t) => ({ value: t.id, label: t.team_name }));
   const cOpts = (categories ?? []).map((c) => ({ value: c.name, label: c.name }));
   const prov = providerStatus();
@@ -85,9 +86,9 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
             Demo accounts: {DEMO_STAFF.map((s) => `${s.email} (${s.role})`).join(" · ")}
           </div>
           <div className="mt-2 text-xs">
-            Student QR pages: <Link className="text-[#0071e3] underline" href="/report/kossuth-b-floor2-washer03">Washer #3</Link> ·{" "}
-            <Link className="text-[#0071e3] underline" href="/report/kossuth-b-floor1-corridor">Kossuth B corridor</Link> ·{" "}
-            <Link className="text-[#0071e3] underline" href="/report/kossuth-b-floor2-kitchen">Kossuth B kitchen</Link>
+            Student QR pages: <Link className="text-[#0071e3] underline" href="/report/kossuth-b-floor2-laundry">Kossuth B laundry room</Link> ·{" "}
+            <Link className="text-[#0071e3] underline" href="/report/kossuth-b-room-204">Kossuth B room 204</Link> ·{" "}
+            <Link className="text-[#0071e3] underline" href="/report/kossuth-b-floor1-corridor">Kossuth B corridor</Link>
           </div>
         </Box>
       </div>
@@ -101,8 +102,8 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
     const lFields: Field[] = [
       { name: "building_id", label: "Building", type: "select", options: bOpts, required: true },
       { name: "floor", label: "Floor", type: "number", required: true },
-      { name: "area_name", label: "Area name", type: "text", required: true },
-      { name: "qr_slug", label: "QR slug", type: "text", required: true, placeholder: "kossuth-b-floor2-kitchen" },
+      { name: "room_number", label: "Room number (rooms only)", type: "text", placeholder: "204" },
+      { name: "area_name", label: "Name (shared spaces, optional for rooms)", type: "text", placeholder: "Laundry Room" },
       { name: "location_type", label: "Type", type: "select", options: ["laundry", "kitchen", "corridor", "bathroom", "common_room", "bedroom", "technical", "other"].map((x) => ({ value: x, label: x })), required: true },
     ];
     body = (
@@ -113,20 +114,51 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
         <Box title="Add location">
           <EntityForm endpoint="/api/admin/locations" fields={lFields} />
         </Box>
-        {(buildings ?? []).map((b) => (
-          <Box key={b.id} title={`${b.name} (${b.code})${b.is_demo ? " · demo" : ""}`}>
-            <ul className="divide-y text-sm">
-              {(locations ?? []).filter((l) => l.building_id === b.id).map((l) => (
-                <li key={l.id} className="flex flex-wrap items-center justify-between gap-2 py-2">
-                  <span>
-                    Floor {l.floor} · {l.area_name} <span className="font-mono text-xs text-muted-foreground">/{l.qr_slug}</span>
-                  </span>
-                  <DeleteButton endpoint="/api/admin/locations" id={l.id} />
-                </li>
+        <p className="text-xs text-muted-foreground">
+          Every room or shared space gets one permanent QR code, generated when it is created. Renaming a room or replacing its equipment never changes the code, so
+          printed labels keep working.
+        </p>
+        {(buildings ?? []).map((b) => {
+          const locs = (locations ?? []).filter((l) => l.building_id === b.id);
+          const floors = [...new Set(locs.map((l) => l.floor))].sort((x, y) => x - y);
+          return (
+            <Box key={b.id} title={`${b.name} (${b.code})${b.is_demo ? " · demo" : ""}`}>
+              {floors.length === 0 ? <p className="text-sm text-muted-foreground">No locations yet.</p> : null}
+              {floors.map((f) => (
+                <div key={f} className="mb-3 last:mb-0">
+                  <h3 className="text-xs font-semibold tracking-[0.04em] text-muted-foreground uppercase">Floor {f}</h3>
+                  <ul className="divide-y text-sm">
+                    {locs.filter((l) => l.floor === f).map((l) => (
+                      <li key={l.id} className="py-2">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <span>
+                            <strong className="font-medium">{placeName(l)}</strong>
+                            {l.room_number && l.area_name !== placeName(l) ? <span className="text-muted-foreground"> · {l.area_name}</span> : null} ·{" "}
+                            <span className="text-muted-foreground">{l.location_type.replace("_", " ")}</span>{" "}
+                            <span className="font-mono text-xs text-muted-foreground">{l.location_code}</span>
+                          </span>
+                          <span className="flex items-center gap-3 text-xs">
+                            <Link className="text-[#0071e3] underline" href={`/admin?tab=qr#qr-${l.qr_slug}`}>QR code</Link>
+                            <DeleteButton endpoint="/api/admin/locations" id={l.id} />
+                          </span>
+                        </div>
+                        <EditToggle>
+                          <EntityForm
+                            endpoint="/api/admin/locations"
+                            id={l.id}
+                            submitLabel="Save (QR code stays the same)"
+                            fields={lFields.filter((x) => x.name !== "building_id")}
+                            initial={{ floor: String(l.floor), room_number: l.room_number ?? "", area_name: l.area_name, location_type: l.location_type }}
+                          />
+                        </EditToggle>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               ))}
-            </ul>
-          </Box>
-        ))}
+            </Box>
+          );
+        })}
       </div>
     );
   } else if (tab === "assets") {
@@ -137,7 +169,6 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
       { name: "category", label: "Category", type: "select", options: cOpts, required: true },
       { name: "building_id", label: "Building", type: "select", options: bOpts, required: true },
       { name: "location_id", label: "Location", type: "select", options: lOpts, required: true },
-      { name: "qr_slug", label: "QR slug", type: "text" },
       { name: "manufacturer", label: "Manufacturer", type: "text" },
       { name: "model", label: "Model", type: "text" },
       { name: "installation_date", label: "Installed", type: "date" },
@@ -161,7 +192,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <span>
                     <Link href={`/assets/${a.id}`} className="font-medium text-[#0071e3] hover:underline">{a.asset_name}</Link>{" "}
-                    <span className="font-mono text-xs text-muted-foreground">{a.asset_code}</span> · {a.category} · replacement {a.replacement_cost ?? "—"} {a.currency} · {a.operational_status}
+                    <span className="font-mono text-xs text-muted-foreground">{a.asset_code}</span> · {a.category} · {lOpts.find((o) => o.value === a.location_id)?.label ?? "—"} · replacement {a.replacement_cost ?? "—"} {a.currency} · {a.operational_status}
                   </span>
                   <span className="flex gap-3">
                     <DeleteButton endpoint="/api/admin/assets" id={a.id} />
@@ -184,28 +215,30 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
       </div>
     );
   } else if (tab === "qr") {
-    const { data: assets } = await db.from("assets").select("id, asset_name, asset_code, qr_slug, building_id").not("qr_slug", "is", null).order("asset_code");
-    const items = [
-      ...(locations ?? []).map((l) => ({ slug: l.qr_slug, title: l.area_name, sub: `${(buildings ?? []).find((b) => b.id === l.building_id)?.name} · floor ${l.floor}`, kind: "Location" })),
-      ...(assets ?? []).map((a) => ({ slug: a.qr_slug as string, title: a.asset_name, sub: `${a.asset_code} · ${(buildings ?? []).find((b) => b.id === a.building_id)?.name}`, kind: "Asset" })),
-    ];
+    const bById = new Map((buildings ?? []).map((x) => [x.id, x]));
+    const items = (locations ?? [])
+      .slice()
+      .sort((x, y) => (bById.get(x.building_id)?.name ?? "").localeCompare(bById.get(y.building_id)?.name ?? "") || x.floor - y.floor || placeName(x).localeCompare(placeName(y)))
+      .map((l) => ({ slug: l.qr_slug, code: l.location_code, title: placeName(l), sub: `${bById.get(l.building_id)?.name} · Floor ${l.floor}` }));
     const svgs = await Promise.all(items.map((i) => QRCode.toString(appUrl(`/report/${i.slug}`), { type: "svg", margin: 1 })));
     body = (
-      <Box title="QR labels">
+      <Box title="QR codes — one per room or shared space">
         <p className="mb-3 text-xs text-muted-foreground">
-          Each code encodes only the public report URL with a stable slug; location data is resolved on the server.{" "}
+          Each code opens the report page for its location. Students then say what is wrong (washer, fridge, heating…), so one code covers all the equipment in the room.
+          Codes are permanent: renaming the room or replacing equipment does not change them.{" "}
           <Link href="/admin/qr-labels" className="text-[#0071e3] underline">Open printable label sheet</Link>
         </p>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
           {items.map((i, idx) => (
-            <div key={i.slug} className="rounded-xl border p-2 text-center">
+            <div key={i.slug} id={`qr-${i.slug}`} className="scroll-mt-24 rounded-xl border p-2 text-center target:border-[#0071e3] target:ring-4 target:ring-[#0071e3]/20">
               <div className="mx-auto w-28" dangerouslySetInnerHTML={{ __html: svgs[idx] }} />
               <p className="mt-1 text-xs font-medium">{i.title}</p>
-              <p className="text-[11px] text-muted-foreground">{i.kind} · {i.sub}</p>
+              <p className="text-[11px] text-muted-foreground">{i.sub}</p>
+              <p className="font-mono text-[10px] text-muted-foreground">{i.code}</p>
               <div className="mt-1 flex justify-center gap-2 text-[11px]">
                 <a className="text-[#0071e3] underline" href={`/api/qr/${i.slug}?format=png`}>PNG</a>
                 <a className="text-[#0071e3] underline" href={`/api/qr/${i.slug}`} target="_blank" rel="noreferrer">SVG</a>
-                <Link className="text-[#0071e3] underline" href={`/report/${i.slug}`}>Open</Link>
+                <Link className="text-[#0071e3] underline" href={`/report/${i.slug}`}>Preview</Link>
               </div>
             </div>
           ))}

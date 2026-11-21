@@ -2,6 +2,7 @@ import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { generateToken, hashToken } from "@/lib/security/tokens";
 import { appUrl } from "@/lib/env";
+import { placeName } from "@/lib/locations/label";
 
 export interface StaffRecipient {
   id: string;
@@ -56,7 +57,7 @@ export async function studentEmailContext(db: SupabaseClient, reportId: string, 
   const { data } = await db
     .from("reports")
     .select(
-      "ticket_id, reporter_name, report_number, locations(area_name, floor, buildings(name)), assets(asset_name), tickets!reports_ticket_id_fkey(ticket_number, category, status, safety_level, resolution_verified)",
+      "ticket_id, reporter_name, report_number, locations(area_name, floor, room_number, buildings(name)), assets(asset_name), tickets!reports_ticket_id_fkey(ticket_number, category, status, safety_level, resolution_verified)",
     )
     .eq("id", reportId)
     .single();
@@ -64,7 +65,7 @@ export async function studentEmailContext(db: SupabaseClient, reportId: string, 
     ticket_id: string | null;
     reporter_name: string;
     report_number: string;
-    locations: { area_name: string; floor: number; buildings: { name: string } };
+    locations: { area_name: string; floor: number; room_number: string | null; buildings: { name: string } };
     assets: { asset_name: string } | null;
     tickets: { ticket_number: string; category: string; status: import("@/types/domain").TicketStatus; safety_level: string; resolution_verified: boolean } | null;
   };
@@ -75,7 +76,7 @@ export async function studentEmailContext(db: SupabaseClient, reportId: string, 
     ticketNumber: r.tickets?.ticket_number ?? "",
     building: r.locations.buildings.name,
     floor: r.locations.floor,
-    area: r.locations.area_name,
+    area: placeName(r.locations),
     asset: r.assets?.asset_name ?? null,
     category: r.tickets?.category ?? "General",
     status: r.tickets?.status ?? "submitted",

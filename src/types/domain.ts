@@ -42,7 +42,12 @@ export interface LocationRow {
   id: string;
   building_id: string;
   floor: number;
+  /** Display name of the room or shared space ("Room 204", "Laundry Room"). */
   area_name: string;
+  room_number: string | null;
+  /** Stable human-readable identifier printed on the QR label, e.g. KOS-B-R204. */
+  location_code: string;
+  /** Permanent QR identifier (cannot change once printed). */
   qr_slug: string;
   location_type: string;
 }
@@ -98,13 +103,16 @@ export interface TicketRow {
   updated_at: string;
 }
 
-/** Location context resolved server-side from a QR slug. Never from the browser. */
+/**
+ * Location context resolved server-side from a QR slug. Never from the browser.
+ * One QR code identifies one room or shared space; equipment is not part of it.
+ */
 export interface QrContext {
-  kind: "asset" | "location";
+  /** "location" for location QR codes; "legacy_asset" for old equipment labels, which open their room. */
+  kind: "location" | "legacy_asset";
   slug: string;
   building: Building;
   location: LocationRow;
-  asset: AssetRow | null;
-  /** Assets at this location a student may optionally pick from (location QR codes). */
+  /** Equipment registered at this location (internal: helps the classifier, never shown as a requirement). */
   locationAssets: Pick<AssetRow, "id" | "asset_code" | "asset_name" | "category">[];
 }

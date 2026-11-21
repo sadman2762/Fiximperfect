@@ -11,8 +11,8 @@ location/asset context resolved from the QR code the student scanned (this conte
 
 Your job:
 - Classify the problem into exactly one of the allowed categories (use the exact name).
-- Identify the affected asset. If the QR code identified an asset, use its asset code unless the report clearly concerns
-  something else at the location. Only ever return an asset code from the provided list, or null.
+- Identify the affected equipment if the report makes clear which registered machine it is (e.g. "washer number 3").
+  If it is ambiguous, return null. Only ever return an asset code from the provided list, or null.
 - Describe the fault in a few words ("issue") and write a short neutral title and summary.
 - visual_evidence must list only what is directly visible in the photograph. Put possible causes in inferred_causes and
   phrase them as possibilities. If no photo was provided, visual_evidence is empty and image_assessment is "not_provided".
@@ -25,14 +25,15 @@ ${UNTRUSTED_INPUT_POLICY}`;
 
 export function buildContextBlock(ctx: ReportContext): string {
   const assetLine = ctx.asset
-    ? `Asset identified by QR code: ${ctx.asset.asset_code} — ${ctx.asset.asset_name} (category: ${ctx.asset.category})`
-    : "QR code identifies a location, not a specific asset.";
+    ? `Equipment already identified: ${ctx.asset.asset_code} — ${ctx.asset.asset_name} (category: ${ctx.asset.category})`
+    : "The QR code identifies the room or shared space, not a specific piece of equipment.";
+  const hint = ctx.studentCategory ? `\nThe student says it is about: ${ctx.studentCategory} (a hint; trust the description and photo if they disagree).` : "";
   const assets = ctx.locationAssets.map((a) => `- ${a.asset_code}: ${a.asset_name} (${a.category})`).join("\n") || "- none registered";
   return `Location (trusted, from QR code): ${ctx.buildingName}, floor ${ctx.floor}, ${ctx.areaName}
 ${assetLine}
 Assets registered at this location:
 ${assets}
-Allowed categories: ${ctx.categories.join(", ")}`;
+Allowed categories: ${ctx.categories.join(", ")}${hint}`;
 }
 
 export function reportContent(ctx: ReportContext, instruction: string): Anthropic.Beta.Messages.BetaContentBlockParam[] {

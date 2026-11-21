@@ -19,7 +19,7 @@ export default async function AssetPage({ params }: { params: Promise<{ id: stri
   const { id } = await params;
   if (!/^[0-9a-f-]{36}$/i.test(id)) notFound();
   const db = await sessionClient();
-  const { data: asset } = await db.from("assets").select("*").eq("id", id).maybeSingle();
+  const { data: asset } = await db.from("assets").select("*, locations(qr_slug, location_code)").eq("id", id).maybeSingle();
   if (!asset) notFound();
   const [[s], tickets, costs, feedback] = await Promise.all([
     loadAssetStats(db, id),
@@ -39,9 +39,10 @@ export default async function AssetPage({ params }: { params: Promise<{ id: stri
         title={`${asset.asset_name} (${asset.asset_code})`}
         description={`${s.building_name} · floor ${s.floor} · ${s.location_name} · ${asset.manufacturer ?? "unknown make"} ${asset.model ?? ""} · installed ${asset.installation_date ?? "unknown"}`}
         actions={
-          asset.qr_slug && staff.role !== "management" ? (
-            <a href={`/api/qr/${asset.qr_slug}?format=png`} className={buttonVariants({ variant: "outline" })}>
-              <Download aria-hidden /> QR label
+          asset.locations?.qr_slug && staff.role !== "management" ? (
+            // Equipment shares the QR code of the room it is in.
+            <a href={`/api/qr/${asset.locations.qr_slug}?format=png`} className={buttonVariants({ variant: "outline" })} title={`Room QR code ${asset.locations.location_code}`}>
+              <Download aria-hidden /> Room QR label
             </a>
           ) : null
         }

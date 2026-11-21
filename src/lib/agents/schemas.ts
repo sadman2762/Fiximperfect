@@ -71,13 +71,17 @@ export interface ReportContext {
   buildingName: string;
   floor: number;
   areaName: string;
+  /** Always null for location QR codes; kept for reports that already name a machine. */
   asset: { asset_code: string; asset_name: string; category: string } | null;
+  /** Optional category the student picked ("what is it about?"). A hint, not a fact. */
+  studentCategory?: string | null;
   locationAssets: { asset_code: string; asset_name: string; category: string }[];
   categories: string[];
 }
 
 export interface DuplicateCandidate {
   id: string;
+  location_id: string;
   ticket_number: string;
   category: string;
   title: string;

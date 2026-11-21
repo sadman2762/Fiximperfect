@@ -10,6 +10,7 @@ import { TicketTable } from "@/components/tickets/ticket-table";
 import { LiveRefresh } from "@/components/dashboard/live-refresh";
 import { AcknowledgeButton } from "@/components/tickets/acknowledge-button";
 import { buttonVariants } from "@/components/ui/button";
+import { placeName } from "@/lib/locations/label";
 
 export const metadata: Metadata = { title: "Overview" };
 
@@ -27,7 +28,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
     listTickets(db, { status: "active", sort: "priority", dir: "desc" }),
     db
       .from("tickets")
-      .select("id, ticket_number, title, escalation_status, created_at, safety_reason, buildings(name), locations(area_name, floor), emergency_alerts(recipient_name, channel, delivery_status, escalation_attempt, acknowledged_at, created_at)")
+      .select("id, ticket_number, title, escalation_status, created_at, safety_reason, buildings(name), locations(area_name, floor, room_number), emergency_alerts(recipient_name, channel, delivery_status, escalation_attempt, acknowledged_at, created_at)")
       .eq("safety_level", "critical")
       .in("escalation_status", ["pending", "alerting", "exhausted"])
       .order("created_at", { ascending: false }),
@@ -40,7 +41,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
     created_at: string;
     safety_reason: string | null;
     buildings: { name: string };
-    locations: { area_name: string; floor: number };
+    locations: { area_name: string; floor: number; room_number: string | null };
     emergency_alerts: { recipient_name: string | null; channel: string; delivery_status: string; escalation_attempt: number; acknowledged_at: string | null; created_at: string }[];
   };
   const canAck = staff.role === "caretaker" || staff.role === "administrator";
@@ -71,7 +72,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
                     Safety emergency {e.ticket_number}: {e.title}
                   </p>
                   <p className="opacity-90">
-                    {e.buildings.name}, floor {e.locations.floor}, {e.locations.area_name} · reported {formatDate(e.created_at)}
+                    {e.buildings.name} · Floor {e.locations.floor} · {placeName(e.locations)} · reported {formatDate(e.created_at)}
                   </p>
                   <p className="mt-1 opacity-90">
                     {e.escalation_status === "exhausted"

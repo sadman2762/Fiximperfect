@@ -9,7 +9,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { NativeSelect } from "@/components/shared/ui-bits";
+import { EQUIPMENT_CATEGORIES } from "@/lib/locations/equipment-categories";
 import { EMERGENCY_PRESETS } from "@/lib/safety/presets";
 import { cn } from "@/lib/utils";
 import { PriorityBadge, StatusBadge, AiModeBadge } from "@/components/shared/badges";
@@ -20,7 +20,7 @@ const schema = z.object({
   additionalDetails: z.string().max(2000).optional(),
   reporterName: z.string().trim().min(1, "Please enter your name").max(120),
   reporterEmail: z.string().trim().email("Please enter a valid email address"),
-  selectedAssetId: z.string().optional(),
+  equipmentCategory: z.string().optional(),
 });
 type FormValues = z.infer<typeof schema>;
 
@@ -44,14 +44,15 @@ interface Result {
 const MAX = 5 * 1024 * 1024;
 const TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 
-export function ReportForm({ qrSlug, assetName, locationAssets }: { qrSlug: string; assetName: string | null; locationAssets: { id: string; label: string }[] }) {
+export function ReportForm({ qrSlug }: { qrSlug: string }) {
   const [photo, setPhoto] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [photoError, setPhotoError] = useState<string | null>(null);
   const [serverError, setServerError] = useState<string | null>(null);
   const [result, setResult] = useState<Result | null>(null);
   const [copied, setCopied] = useState(false);
-  const { register, handleSubmit, formState, setValue, setFocus } = useForm<FormValues>({ resolver: zodResolver(schema) });
+  const { register, handleSubmit, formState, setValue, setFocus, watch } = useForm<FormValues>({ resolver: zodResolver(schema) });
+  const category = watch("equipmentCategory");
   const [emergency, setEmergency] = useState<string | null>(null);
   const preset = EMERGENCY_PRESETS.find((p) => p.id === emergency) ?? null;
   const isCritical = preset?.level === "critical";
@@ -73,7 +74,7 @@ export function ReportForm({ qrSlug, assetName, locationAssets }: { qrSlug: stri
     if (values.additionalDetails) fd.set("additionalDetails", values.additionalDetails);
     fd.set("reporterName", values.reporterName);
     fd.set("reporterEmail", values.reporterEmail);
-    if (values.selectedAssetId) fd.set("selectedAssetId", values.selectedAssetId);
+    if (values.equipmentCategory) fd.set("equipmentCategory", values.equipmentCategory);
     if (photo) fd.set("photo", photo);
     try {
       const res = await fetch("/api/reports", { method: "POST", body: fd });
@@ -223,23 +224,28 @@ export function ReportForm({ qrSlug, assetName, locationAssets }: { qrSlug: stri
         ) : null}
       </fieldset>
 
-      {locationAssets.length > 0 ? (
-        <div className="space-y-1.5">
-          <Label htmlFor="selectedAssetId">Which equipment? (optional)</Label>
-          <NativeSelect id="selectedAssetId" {...register("selectedAssetId")} defaultValue="">
-            <option value="">Not sure / something else</option>
-            {locationAssets.map((a) => (
-              <option key={a.id} value={a.id}>
-                {a.label}
-              </option>
-            ))}
-          </NativeSelect>
+      <fieldset className="space-y-2">
+        <legend className="text-sm font-medium">What is it about? <span className="font-normal text-muted-foreground">(optional)</span></legend>
+        <div className="flex flex-wrap gap-2">
+          {EQUIPMENT_CATEGORIES.map((c) => (
+            <label key={c.value} className="cursor-pointer">
+              <input type="radio" value={c.value} {...register("equipmentCategory")} className="peer sr-only" />
+              <span className="inline-flex rounded-full border border-[#e1e5eb] bg-white px-3.5 py-2 text-[13px] font-medium text-[#0b1f3a] transition-colors peer-checked:border-[#0071e3] peer-checked:bg-[#e8f2ff] peer-checked:text-[#0071e3] peer-focus-visible:ring-4 peer-focus-visible:ring-[#0071e3]/25 hover:border-[#0071e3]/50">
+                {c.label}
+              </span>
+            </label>
+          ))}
         </div>
-      ) : null}
+        {category ? (
+          <button type="button" onClick={() => setValue("equipmentCategory", "")} className="text-[12px] text-muted-foreground underline hover:text-foreground">
+            Clear choice
+          </button>
+        ) : null}
+      </fieldset>
 
       <div className="space-y-1.5">
-        <Label htmlFor="description">What is wrong{assetName ? ` with ${assetName}` : ""}?</Label>
-        <Textarea id="description" rows={4} placeholder="e.g. The door will not close and the machine won't start." aria-invalid={!!formState.errors.description} {...register("description")} />
+        <Label htmlFor="description">Describe the problem in your own words</Label>
+        <Textarea id="description" rows={4} placeholder="e.g. Washer number 3 will not drain and the door stays locked." aria-invalid={!!formState.errors.description} {...register("description")} />
         {formState.errors.description ? <p className="text-sm text-destructive">{formState.errors.description.message}</p> : null}
       </div>
 

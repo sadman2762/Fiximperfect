@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { PRIORITIES, TICKET_STATUSES } from "@/types/domain";
+import { EQUIPMENT_CATEGORY_VALUES } from "@/lib/locations/equipment-categories";
 
 const money = z
   .string()
@@ -9,7 +10,7 @@ const money = z
 
 export const ReportSubmissionSchema = z.object({
   qrSlug: z.string().regex(/^[a-z0-9-]{3,80}$/),
-  selectedAssetId: z.string().uuid().optional().nullable(),
+  equipmentCategory: z.enum(EQUIPMENT_CATEGORY_VALUES).optional().nullable(),
   description: z.string().trim().min(3, "Please describe the problem").max(2000),
   additionalDetails: z.string().trim().max(2000).optional().nullable(),
   reporterName: z.string().trim().min(1, "Please enter your name").max(120),

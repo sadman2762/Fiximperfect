@@ -3,6 +3,7 @@ import { adminClient } from "@/lib/supabase/admin";
 import { hashToken, isWellFormedToken } from "@/lib/security/tokens";
 import { STATUS_LABELS } from "@/lib/tickets/state-machine";
 import type { Priority, TicketStatus } from "@/types/domain";
+import { placeName } from "@/lib/locations/label";
 
 export interface StudentView {
   report: { id: string; report_number: string; description: string; created_at: string; link_status: string | null };
@@ -58,13 +59,13 @@ export async function studentViewByReportId(reportId: string): Promise<StudentVi
   const db = adminClient();
   const { data: r } = await db
     .from("reports")
-    .select("id, report_number, description, created_at, link_status, ticket_id, locations(area_name, floor, buildings(name)), assets(asset_name)")
+    .select("id, report_number, description, created_at, link_status, ticket_id, locations(area_name, floor, room_number, buildings(name)), assets(asset_name)")
     .eq("id", reportId)
     .single();
   if (!r) return null;
   const rep = r as unknown as {
     id: string; report_number: string; description: string; created_at: string; link_status: string | null; ticket_id: string | null;
-    locations: { area_name: string; floor: number; buildings: { name: string } }; assets: { asset_name: string } | null;
+    locations: { area_name: string; floor: number; room_number: string | null; buildings: { name: string } }; assets: { asset_name: string } | null;
   };
   let ticket: StudentView["ticket"] = null;
   let timeline: StudentView["timeline"] = [{ at: rep.created_at, label: "You submitted this report" }];
@@ -92,7 +93,7 @@ export async function studentViewByReportId(reportId: string): Promise<StudentVi
   return {
     report: { id: rep.id, report_number: rep.report_number, description: rep.description, created_at: rep.created_at, link_status: rep.link_status },
     ticket,
-    location: { building: rep.locations.buildings.name, floor: rep.locations.floor, area: rep.locations.area_name, asset: rep.assets?.asset_name ?? null },
+    location: { building: rep.locations.buildings.name, floor: rep.locations.floor, area: placeName(rep.locations), asset: rep.assets?.asset_name ?? null },
     timeline,
   };
 }

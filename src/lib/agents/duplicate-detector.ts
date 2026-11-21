@@ -8,10 +8,11 @@ const SYSTEM = `You are the Duplicate Detection Agent of Fiximperfect. Several s
 maintenance problem. Compare one NEW report with a short list of ACTIVE candidate tickets retrieved from the database
 (same building, nearby location or same asset, recent).
 
-Decide whether the new report describes the SAME underlying problem as one candidate — the same physical asset (or the
-same spot when no asset is registered) with the same fault. Different wording for the same fault is a duplicate
-("door is broken" vs "won't close" vs "latch damaged"). A different fault on the same asset, or the same fault on a
-different asset, is NOT a duplicate.
+QR codes identify a room or shared space, not a machine, so one room can hold several unrelated problems.
+Decide whether the new report describes the SAME underlying problem as one candidate — the same location, the same kind of
+equipment (category) and the same fault; the same machine when both name one. Different wording for the same fault is a
+duplicate ("door is broken" vs "won't close" vs "latch damaged"). A broken washer and a broken fridge in the same room,
+a different fault on the same equipment, or the same fault on a different machine are NOT duplicates.
 
 Return the candidate's ticket number in matched_ticket (or null), a calibrated confidence, and a one-sentence reason that
 names the evidence (asset, location, fault, timing). Be conservative: uncertain matches are reviewed by a human.
@@ -24,6 +25,7 @@ export interface NewReportForDedupe {
   issue: string;
   asset_code: string | null;
   asset_name: string | null;
+  location_id?: string | null;
   area_name: string;
   floor: number;
   submitted_at: string;
@@ -49,7 +51,7 @@ export async function detectDuplicate(
       .map(
         (c) => `<candidate ticket="${c.ticket_number}">
 status: ${c.status}; category: ${c.category}; created: ${c.created_at}
-asset: ${c.asset_code ? `${c.asset_code} (${c.asset_name})` : "none"}; location: floor ${c.floor}, ${c.area_name}
+asset: ${c.asset_code ? `${c.asset_code} (${c.asset_name})` : "none"}; location: floor ${c.floor}, ${c.area_name}; same location as new report: ${report.location_id && c.location_id === report.location_id ? "yes" : "no"}
 title: ${c.title}
 ${untrusted("student_reports", c.report_descriptions.map((d) => `- ${d}`).join("\n"))}
 </candidate>`,

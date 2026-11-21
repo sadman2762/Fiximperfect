@@ -46,40 +46,47 @@ const BUILDINGS = [
   { code: "RIV", name: "Riverside Hall", address: "3 Sample Quay (fictional)" },
 ];
 
-type Loc = { key: string; building: string; floor: number; area_name: string; qr_slug: string; location_type: string };
+/** One QR code per room or shared space. `code` is the label printed under the QR. */
+type Loc = { key: string; building: string; floor: number; area_name: string; room_number?: string; code: string; qr_slug: string; location_type: string };
 const LOCATIONS: Loc[] = [
-  { key: "kb-laundry2", building: "KOS-B", floor: 2, area_name: "Laundry Room", qr_slug: "kossuth-b-floor2-laundry", location_type: "laundry" },
-  { key: "kb-kitchen2", building: "KOS-B", floor: 2, area_name: "Shared Kitchen", qr_slug: "kossuth-b-floor2-kitchen", location_type: "kitchen" },
-  { key: "kb-corridor1", building: "KOS-B", floor: 1, area_name: "Corridor East", qr_slug: "kossuth-b-floor1-corridor", location_type: "corridor" },
-  { key: "kb-bath3", building: "KOS-B", floor: 3, area_name: "Shared Bathroom", qr_slug: "kossuth-b-floor3-bathroom", location_type: "bathroom" },
-  { key: "kb-common0", building: "KOS-B", floor: 0, area_name: "Common Room", qr_slug: "kossuth-b-floor0-common", location_type: "common_room" },
-  { key: "ka-laundry1", building: "KOS-A", floor: 1, area_name: "Laundry Room", qr_slug: "kossuth-a-floor1-laundry", location_type: "laundry" },
-  { key: "ka-kitchen1", building: "KOS-A", floor: 1, area_name: "Shared Kitchen", qr_slug: "kossuth-a-floor1-kitchen", location_type: "kitchen" },
-  { key: "ka-corridor2", building: "KOS-A", floor: 2, area_name: "Corridor", qr_slug: "kossuth-a-floor2-corridor", location_type: "corridor" },
-  { key: "ri-kitchen0", building: "RIV", floor: 0, area_name: "Ground Floor Kitchen", qr_slug: "riverside-floor0-kitchen", location_type: "kitchen" },
-  { key: "ri-laundry1", building: "RIV", floor: 1, area_name: "Laundry Room", qr_slug: "riverside-floor1-laundry", location_type: "laundry" },
-  { key: "ri-bath2", building: "RIV", floor: 2, area_name: "Bathroom Block", qr_slug: "riverside-floor2-bathroom", location_type: "bathroom" },
+  { key: "kb-laundry2", building: "KOS-B", floor: 2, area_name: "Laundry Room", code: "KOS-B-F2-LAUNDRY", qr_slug: "kossuth-b-floor2-laundry", location_type: "laundry" },
+  { key: "kb-kitchen2", building: "KOS-B", floor: 2, area_name: "Shared Kitchen", code: "KOS-B-F2-KITCHEN", qr_slug: "kossuth-b-floor2-kitchen", location_type: "kitchen" },
+  { key: "kb-r204", building: "KOS-B", floor: 2, area_name: "Room 204", room_number: "204", code: "KOS-B-R204", qr_slug: "kossuth-b-room-204", location_type: "bedroom" },
+  { key: "kb-r205", building: "KOS-B", floor: 2, area_name: "Room 205", room_number: "205", code: "KOS-B-R205", qr_slug: "kossuth-b-room-205", location_type: "bedroom" },
+  { key: "kb-corridor1", building: "KOS-B", floor: 1, area_name: "Corridor East", code: "KOS-B-F1-CORRIDOR", qr_slug: "kossuth-b-floor1-corridor", location_type: "corridor" },
+  { key: "kb-bath3", building: "KOS-B", floor: 3, area_name: "Shared Bathroom", code: "KOS-B-F3-BATHROOM", qr_slug: "kossuth-b-floor3-bathroom", location_type: "bathroom" },
+  { key: "kb-common0", building: "KOS-B", floor: 0, area_name: "Common Room", code: "KOS-B-F0-COMMON", qr_slug: "kossuth-b-floor0-common", location_type: "common_room" },
+  { key: "ka-laundry1", building: "KOS-A", floor: 1, area_name: "Laundry Room", code: "KOS-A-F1-LAUNDRY", qr_slug: "kossuth-a-floor1-laundry", location_type: "laundry" },
+  { key: "ka-kitchen1", building: "KOS-A", floor: 1, area_name: "Shared Kitchen", code: "KOS-A-F1-KITCHEN", qr_slug: "kossuth-a-floor1-kitchen", location_type: "kitchen" },
+  { key: "ka-r112", building: "KOS-A", floor: 1, area_name: "Room 112", room_number: "112", code: "KOS-A-R112", qr_slug: "kossuth-a-room-112", location_type: "bedroom" },
+  { key: "ka-corridor2", building: "KOS-A", floor: 2, area_name: "Corridor", code: "KOS-A-F2-CORRIDOR", qr_slug: "kossuth-a-floor2-corridor", location_type: "corridor" },
+  { key: "ri-kitchen0", building: "RIV", floor: 0, area_name: "Ground Floor Kitchen", code: "RIV-F0-KITCHEN", qr_slug: "riverside-floor0-kitchen", location_type: "kitchen" },
+  { key: "ri-laundry1", building: "RIV", floor: 1, area_name: "Laundry Room", code: "RIV-F1-LAUNDRY", qr_slug: "riverside-floor1-laundry", location_type: "laundry" },
+  { key: "ri-r101", building: "RIV", floor: 1, area_name: "Room 101", room_number: "101", code: "RIV-R101", qr_slug: "riverside-room-101", location_type: "bedroom" },
+  { key: "ri-bath2", building: "RIV", floor: 2, area_name: "Bathroom Block", code: "RIV-F2-BATHROOM", qr_slug: "riverside-floor2-bathroom", location_type: "bathroom" },
 ];
 
 type Asset = {
-  code: string; name: string; category: string; loc: string; qr: string; manufacturer: string; model: string;
+  code: string; name: string; category: string; loc: string; qr?: string; manufacturer: string; model: string;
   installed: string; cost: string; replacement: string; life: number; condition?: string;
 };
 const ASSETS: Asset[] = [
-  { code: "WASHER-001", name: "Washer #1", category: "Laundry Equipment", loc: "kb-laundry2", qr: "kossuth-b-floor2-washer01", manufacturer: "Lavex (fictional)", model: "LX-700", installed: "2023-03-01", cost: "420.00", replacement: "380.00", life: 8, condition: "poor" },
-  { code: "WASHER-002", name: "Washer #2", category: "Laundry Equipment", loc: "kb-laundry2", qr: "kossuth-b-floor2-washer02", manufacturer: "Lavex (fictional)", model: "LX-700", installed: "2023-03-01", cost: "420.00", replacement: "380.00", life: 8 },
+  { code: "WASHER-001", name: "Washer #1", category: "Laundry Equipment", loc: "kb-laundry2", manufacturer: "Lavex (fictional)", model: "LX-700", installed: "2023-03-01", cost: "420.00", replacement: "380.00", life: 8, condition: "poor" },
+  { code: "WASHER-002", name: "Washer #2", category: "Laundry Equipment", loc: "kb-laundry2", manufacturer: "Lavex (fictional)", model: "LX-700", installed: "2023-03-01", cost: "420.00", replacement: "380.00", life: 8 },
   { code: "WASHER-003", name: "Washer #3", category: "Laundry Equipment", loc: "kb-laundry2", qr: "kossuth-b-floor2-washer03", manufacturer: "Lavex (fictional)", model: "LX-700", installed: "2023-03-01", cost: "420.00", replacement: "380.00", life: 8 },
-  { code: "WASHER-004", name: "Washer #4", category: "Laundry Equipment", loc: "kb-laundry2", qr: "kossuth-b-floor2-washer04", manufacturer: "Lavex (fictional)", model: "LX-900", installed: "2024-09-15", cost: "510.00", replacement: "460.00", life: 8 },
-  { code: "DRYER-001", name: "Dryer #1", category: "Laundry Equipment", loc: "kb-laundry2", qr: "kossuth-b-floor2-dryer01", manufacturer: "Lavex (fictional)", model: "TD-300", installed: "2022-01-10", cost: "390.00", replacement: "350.00", life: 7 },
-  { code: "FRIDGE-001", name: "Refrigerator #1", category: "Kitchen Appliances", loc: "kb-kitchen2", qr: "kossuth-b-floor2-fridge01", manufacturer: "Frostline (fictional)", model: "FL-320", installed: "2021-08-20", cost: "540.00", replacement: "499.00", life: 10 },
-  { code: "OVEN-001", name: "Oven #1", category: "Kitchen Appliances", loc: "kb-kitchen2", qr: "kossuth-b-floor2-oven01", manufacturer: "Cuisina (fictional)", model: "CU-60", installed: "2019-05-02", cost: "610.00", replacement: "580.00", life: 10 },
-  { code: "ROUTER-KB0", name: "Wi-Fi Access Point (Common Room)", category: "Internet", loc: "kb-common0", qr: "kossuth-b-floor0-wifi", manufacturer: "Netwave (fictional)", model: "AP-6", installed: "2022-09-01", cost: "180.00", replacement: "190.00", life: 5 },
-  { code: "SHOWER-KB3", name: "Shower Unit 3A", category: "Plumbing", loc: "kb-bath3", qr: "kossuth-b-floor3-shower3a", manufacturer: "Aquaflow (fictional)", model: "S-12", installed: "2018-06-01", cost: "300.00", replacement: "320.00", life: 12 },
-  { code: "WASHER-A01", name: "Washer A1", category: "Laundry Equipment", loc: "ka-laundry1", qr: "kossuth-a-floor1-washer01", manufacturer: "Lavex (fictional)", model: "LX-700", installed: "2020-02-01", cost: "400.00", replacement: "380.00", life: 8 },
-  { code: "FRIDGE-A01", name: "Refrigerator A1", category: "Kitchen Appliances", loc: "ka-kitchen1", qr: "kossuth-a-floor1-fridge01", manufacturer: "Frostline (fictional)", model: "FL-320", installed: "2017-04-11", cost: "520.00", replacement: "499.00", life: 10, condition: "fair" },
-  { code: "RADIATOR-A2", name: "Corridor Radiator", category: "Heating", loc: "ka-corridor2", qr: "kossuth-a-floor2-radiator", manufacturer: "Thermique (fictional)", model: "R-90", installed: "2012-10-01", cost: "250.00", replacement: "280.00", life: 15 },
-  { code: "FRIDGE-R01", name: "Riverside Fridge 1", category: "Kitchen Appliances", loc: "ri-kitchen0", qr: "riverside-floor0-fridge01", manufacturer: "Frostline (fictional)", model: "FL-400", installed: "2023-01-05", cost: "560.00", replacement: "520.00", life: 10 },
-  { code: "WASHER-R01", name: "Riverside Washer 1", category: "Laundry Equipment", loc: "ri-laundry1", qr: "riverside-floor1-washer01", manufacturer: "Lavex (fictional)", model: "LX-900", installed: "2024-02-01", cost: "510.00", replacement: "460.00", life: 8 },
+  { code: "WASHER-004", name: "Washer #4", category: "Laundry Equipment", loc: "kb-laundry2", manufacturer: "Lavex (fictional)", model: "LX-900", installed: "2024-09-15", cost: "510.00", replacement: "460.00", life: 8 },
+  { code: "DRYER-001", name: "Dryer #1", category: "Laundry Equipment", loc: "kb-laundry2", manufacturer: "Lavex (fictional)", model: "TD-300", installed: "2022-01-10", cost: "390.00", replacement: "350.00", life: 7 },
+  { code: "FRIDGE-001", name: "Refrigerator #1", category: "Kitchen Appliances", loc: "kb-kitchen2", manufacturer: "Frostline (fictional)", model: "FL-320", installed: "2021-08-20", cost: "540.00", replacement: "499.00", life: 10 },
+  { code: "OVEN-001", name: "Oven #1", category: "Kitchen Appliances", loc: "kb-kitchen2", manufacturer: "Cuisina (fictional)", model: "CU-60", installed: "2019-05-02", cost: "610.00", replacement: "580.00", life: 10 },
+  { code: "FRIDGE-204", name: "Room 204 Mini Fridge", category: "Kitchen Appliances", loc: "kb-r204", manufacturer: "Frostline (fictional)", model: "FL-90", installed: "2022-08-20", cost: "190.00", replacement: "170.00", life: 8 },
+  { code: "RADIATOR-204", name: "Room 204 Radiator", category: "Heating", loc: "kb-r204", manufacturer: "Thermique (fictional)", model: "R-60", installed: "2015-10-01", cost: "210.00", replacement: "240.00", life: 15 },
+  { code: "ROUTER-KB0", name: "Wi-Fi Access Point (Common Room)", category: "Internet", loc: "kb-common0", manufacturer: "Netwave (fictional)", model: "AP-6", installed: "2022-09-01", cost: "180.00", replacement: "190.00", life: 5 },
+  { code: "SHOWER-KB3", name: "Shower Unit 3A", category: "Plumbing", loc: "kb-bath3", manufacturer: "Aquaflow (fictional)", model: "S-12", installed: "2018-06-01", cost: "300.00", replacement: "320.00", life: 12 },
+  { code: "WASHER-A01", name: "Washer A1", category: "Laundry Equipment", loc: "ka-laundry1", manufacturer: "Lavex (fictional)", model: "LX-700", installed: "2020-02-01", cost: "400.00", replacement: "380.00", life: 8 },
+  { code: "FRIDGE-A01", name: "Refrigerator A1", category: "Kitchen Appliances", loc: "ka-kitchen1", manufacturer: "Frostline (fictional)", model: "FL-320", installed: "2017-04-11", cost: "520.00", replacement: "499.00", life: 10, condition: "fair" },
+  { code: "RADIATOR-A2", name: "Corridor Radiator", category: "Heating", loc: "ka-corridor2", manufacturer: "Thermique (fictional)", model: "R-90", installed: "2012-10-01", cost: "250.00", replacement: "280.00", life: 15 },
+  { code: "FRIDGE-R01", name: "Riverside Fridge 1", category: "Kitchen Appliances", loc: "ri-kitchen0", manufacturer: "Frostline (fictional)", model: "FL-400", installed: "2023-01-05", cost: "560.00", replacement: "520.00", life: 10 },
+  { code: "WASHER-R01", name: "Riverside Washer 1", category: "Laundry Equipment", loc: "ri-laundry1", manufacturer: "Lavex (fictional)", model: "LX-900", installed: "2024-02-01", cost: "510.00", replacement: "460.00", life: 8 },
 ];
 
 const DAY = 86_400_000;
@@ -158,7 +165,7 @@ export async function seedDemo() {
 
   const { data: locs, error: lErr } = await db
     .from("locations")
-    .insert(LOCATIONS.map((l) => ({ building_id: bId(l.building), floor: l.floor, area_name: l.area_name, qr_slug: l.qr_slug, location_type: l.location_type, is_demo: true })))
+    .insert(LOCATIONS.map((l) => ({ building_id: bId(l.building), floor: l.floor, area_name: l.area_name, room_number: l.room_number ?? null, location_code: l.code, qr_slug: l.qr_slug, location_type: l.location_type, is_demo: true })))
     .select("id, qr_slug, building_id");
   if (lErr) throw new Error(lErr.message);
   const locByKey = (key: string) => locs!.find((x) => x.qr_slug === LOCATIONS.find((l) => l.key === key)!.qr_slug)!;
@@ -170,7 +177,7 @@ export async function seedDemo() {
         const loc = locByKey(a.loc);
         return {
           asset_code: a.code, asset_name: a.name, category: a.category, manufacturer: a.manufacturer, model: a.model,
-          building_id: loc.building_id, location_id: loc.id, qr_slug: a.qr, installation_date: a.installed, purchase_date: a.installed,
+          building_id: loc.building_id, location_id: loc.id, qr_slug: a.qr ?? null, installation_date: a.installed, purchase_date: a.installed,
           purchase_cost: a.cost, replacement_cost: a.replacement, currency: "EUR", expected_useful_life_years: a.life,
           condition: a.condition ?? "good", is_demo: true,
         };

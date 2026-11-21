@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { PRIORITIES, TICKET_STATUSES } from "@/types/domain";
 import { STATUS_LABELS } from "@/lib/tickets/state-machine";
+import { floorAndPlace } from "@/lib/locations/label";
 
 export const metadata: Metadata = { title: "Tickets" };
 
@@ -19,6 +20,9 @@ export default async function TicketsPage({ searchParams }: { searchParams: Prom
   const f = TicketFilterSchema.parse(raw);
   const db = await sessionClient();
   const [list, opts] = await Promise.all([listTickets(db, f), filterOptions(db)]);
+  const scoped = opts.locations.filter((l) => !f.building || l.building_id === f.building);
+  const floors = [...new Set(scoped.map((l) => l.floor))].sort((a, b) => a - b);
+  const roomOptions = scoped.filter((l) => f.floor === undefined || l.floor === f.floor);
   const pages = Math.max(1, Math.ceil(list.total / list.pageSize));
 
   const href = (patch: Partial<TicketFilters>) => {
@@ -32,7 +36,7 @@ export default async function TicketsPage({ searchParams }: { searchParams: Prom
       <LiveRefresh />
       <PageHeader title="Maintenance tickets" description={`${list.total} ticket${list.total === 1 ? "" : "s"} match the current filters.`} />
       <form className="mb-4 grid grid-cols-2 gap-2 md:grid-cols-4 lg:grid-cols-7" role="search">
-        <Input name="q" placeholder="Search tickets…" defaultValue={f.q} className="col-span-2 md:col-span-4 lg:col-span-2" aria-label="Search" />
+        <Input name="q" placeholder="Search tickets…" defaultValue={f.q} className="col-span-2 md:col-span-4 lg:col-span-7" aria-label="Search" />
         <NativeSelect name="status" defaultValue={f.status ?? "active"} aria-label="Status">
           <option value="active">All active</option>
           <option value="all">All statuses</option>
@@ -63,6 +67,30 @@ export default async function TicketsPage({ searchParams }: { searchParams: Prom
               {b.name}
             </option>
           ))}
+        </NativeSelect>
+        <NativeSelect name="floor" defaultValue={f.floor !== undefined ? String(f.floor) : ""} aria-label="Floor">
+          <option value="">Any floor</option>
+          {floors.map((n) => (
+            <option key={n} value={n}>
+              Floor {n}
+            </option>
+          ))}
+        </NativeSelect>
+        <NativeSelect name="location" defaultValue={f.location ?? ""} aria-label="Room or area">
+          <option value="">Any room or area</option>
+          {opts.buildings
+            .filter((b) => !f.building || b.id === f.building)
+            .map((b) => (
+              <optgroup key={b.id} label={b.name}>
+                {roomOptions
+                  .filter((l) => l.building_id === b.id)
+                  .map((l) => (
+                    <option key={l.id} value={l.id}>
+                      {floorAndPlace(l)}
+                    </option>
+                  ))}
+              </optgroup>
+            ))}
         </NativeSelect>
         <NativeSelect name="team" defaultValue={f.team ?? ""} aria-label="Team">
           <option value="">Any team</option>

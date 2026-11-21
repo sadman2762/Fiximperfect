@@ -10,6 +10,7 @@ import { loadOverview } from "@/lib/analytics/queries";
 import { loadAssetStats } from "@/lib/assets/intelligence";
 import * as scenarios from "@/lib/demo/scenarios";
 import { HttpError } from "@/lib/errors";
+import { listTickets } from "@/lib/tickets/queries";
 
 const CARETAKER = "caretaker@fiximperfect.example"; // Kossuth A + B
 const RIVERSIDE = "caretaker.riverside@fiximperfect.example"; // Riverside only
@@ -25,23 +26,61 @@ beforeEach(async () => {
 });
 
 describe("QR resolution & student reporting", () => {
-  it("resolves an asset QR to the correct building, floor, location and asset (server-side)", async () => {
-    const qr = await resolveQr(db(), "kossuth-b-floor2-washer03");
+  it("resolves a room QR to building, floor and room (server-side), with no equipment attached", async () => {
+    const qr = await resolveQr(db(), "kossuth-b-room-204");
     expect(qr).not.toBeNull();
-    expect(qr!.kind).toBe("asset");
+    expect(qr!.kind).toBe("location");
     expect(qr!.building.name).toBe("Kossuth Dorm B");
     expect(qr!.location.floor).toBe(2);
-    expect(qr!.location.area_name).toBe("Laundry Room");
-    expect(qr!.asset!.asset_code).toBe("WASHER-003");
-    expect(qr!.asset!.asset_name).toBe("Washer #3");
+    expect(qr!.location.room_number).toBe("204");
+    expect(qr!.location.location_code).toBe("KOS-B-R204");
+    expect(qr).not.toHaveProperty("asset");
+    // Several pieces of equipment share the one room code.
+    expect(qr!.locationAssets.map((a) => a.asset_code).sort()).toEqual(["FRIDGE-204", "RADIATOR-204"]);
   });
 
-  it("resolves a location QR with its selectable assets, and rejects unknown slugs", async () => {
+  it("resolves a shared-space QR, and rejects unknown slugs", async () => {
     const qr = await resolveQr(db(), "kossuth-b-floor2-kitchen");
     expect(qr!.kind).toBe("location");
+    expect(qr!.location.area_name).toBe("Shared Kitchen");
     expect(qr!.locationAssets.map((a) => a.asset_code).sort()).toEqual(["FRIDGE-001", "OVEN-001"]);
     expect(await resolveQr(db(), "does-not-exist")).toBeNull();
     expect(await resolveQr(db(), "../../etc/passwd")).toBeNull();
+  });
+
+  it("keeps old equipment QR labels working: they open the room the equipment is in", async () => {
+    const qr = await resolveQr(db(), "kossuth-b-floor2-washer03");
+    expect(qr!.kind).toBe("legacy_asset");
+    expect(qr!.slug).toBe("kossuth-b-floor2-laundry");
+    expect(qr!.location.area_name).toBe("Laundry Room");
+  });
+
+  it("keeps the QR identifier when a room is renamed or its equipment is replaced", async () => {
+    const { data: loc } = await db().from("locations").select("id, qr_slug").eq("qr_slug", "kossuth-b-room-204").single();
+    await db().from("locations").update({ area_name: "Room 204 (renovated)" }).eq("id", loc!.id);
+    await db().from("assets").update({ operational_status: "retired" }).eq("asset_code", "FRIDGE-204");
+    const qr = await resolveQr(db(), "kossuth-b-room-204");
+    expect(qr!.location.id).toBe(loc!.id);
+    expect(qr!.locationAssets.map((a) => a.asset_code)).toEqual(["RADIATOR-204"]);
+    const change = await db().from("locations").update({ qr_slug: "something-else" }).eq("id", loc!.id);
+    expect(change.error?.message).toMatch(/qr_slug_is_permanent/);
+  });
+
+  it("stores building, location, the student's equipment category and the description on the report", async () => {
+    const r = await submitReport({
+      qrSlug: "kossuth-b-room-204",
+      equipmentCategory: "Heating",
+      description: "It is freezing in here",
+      reporterName: "H",
+      reporterEmail: "h@students.fiximperfect.example",
+    });
+    const { data } = await db().from("reports").select("building_id, location_id, equipment_category, description, created_at, locations(room_number, floor)").eq("id", r.reportId).single();
+    const { data: b } = await db().from("buildings").select("id").eq("name", "Kossuth Dorm B").single();
+    expect(data!.building_id).toBe(b!.id);
+    expect(data!.equipment_category).toBe("Heating");
+    expect(data!.description).toBe("It is freezing in here");
+    expect(data!.locations).toMatchObject({ room_number: "204", floor: 2 });
+    expect(r.category).toBe("Heating"); // the student's hint, since the text alone is vague
   });
 
   it("accepts a report without staff authentication and returns a working tracking token", async () => {
@@ -51,11 +90,11 @@ describe("QR resolution & student reporting", () => {
     expect(r.trackingUrl).toMatch(/\/track\/[A-Za-z0-9_-]{43}$/);
     const { data } = await db().from("reports").select("tracking_token_hash, asset_id, assets(asset_code)").eq("id", r.reportId).single();
     expect(data!.tracking_token_hash).toMatch(/^[0-9a-f]{64}$/); // only the hash is stored
-    expect((data!.assets as unknown as { asset_code: string }).asset_code).toBe("FRIDGE-001"); // picked from the location's assets
+    expect((data!.assets as unknown as { asset_code: string }).asset_code).toBe("FRIDGE-001"); // the only fridge in the room, identified from the text
   });
 
   it("stores photos in the private bucket, reachable only through signed URLs", async () => {
-    const r = await submitReport({ qrSlug: "kossuth-b-floor2-washer03", description: "Door broken", reporterName: "P", reporterEmail: "p@students.fiximperfect.example", image: tinyPng() });
+    const r = await submitReport({ qrSlug: "kossuth-b-floor2-laundry", description: "Door broken", reporterName: "P", reporterEmail: "p@students.fiximperfect.example", image: tinyPng() });
     const { data } = await db().from("reports").select("image_path").eq("id", r.reportId).single();
     expect(data!.image_path).toMatch(new RegExp(`^${r.reportId}/[0-9a-f-]+\\.png$`));
     const anonDownload = await anonClient().storage.from("report-images").download(data!.image_path!);
@@ -69,7 +108,7 @@ describe("QR resolution & student reporting", () => {
   it("rejects disguised images before anything is saved", async () => {
     const before = (await db().from("reports").select("id", { count: "exact", head: true })).count;
     await expect(
-      submitReport({ qrSlug: "kossuth-b-floor2-washer03", description: "x x x", reporterName: "P", reporterEmail: "p@students.fiximperfect.example", image: new TextEncoder().encode("GIF-but-not-really-an-image") }),
+      submitReport({ qrSlug: "kossuth-b-floor2-laundry", description: "x x x", reporterName: "P", reporterEmail: "p@students.fiximperfect.example", image: new TextEncoder().encode("GIF-but-not-really-an-image") }),
     ).rejects.toThrow(/JPEG, PNG/);
     expect((await db().from("reports").select("id", { count: "exact", head: true })).count).toBe(before);
   });
@@ -86,7 +125,7 @@ describe("QR resolution & student reporting", () => {
 });
 
 describe("duplicate detection", () => {
-  it("links three reports about Washer #3 to one ticket and keeps every report", async () => {
+  it("links three reports about Washer #3 (one laundry-room QR) to one ticket and keeps every report", async () => {
     const s = await scenarios.scenarioDuplicateDetection();
     expect(s.passed).toBe(true);
     const { data: reports } = await db().from("reports").select("id, link_status, reporter_email").eq("ticket_id", s.ticketId);
@@ -103,7 +142,7 @@ describe("duplicate detection", () => {
   it("is concurrency-safe: simultaneous identical reports produce one ticket", async () => {
     const results = await Promise.all(
       [1, 2, 3, 4].map((i) =>
-        submitReport({ qrSlug: "kossuth-b-floor2-washer02", description: "The washing machine door is broken.", reporterName: `C${i}`, reporterEmail: `c${i}@students.fiximperfect.example` }),
+        submitReport({ qrSlug: "kossuth-b-floor2-laundry", description: "The washing machine door is broken.", reporterName: `C${i}`, reporterEmail: `c${i}@students.fiximperfect.example` }),
       ),
     );
     expect(new Set(results.map((r) => r.ticketId)).size).toBe(1);
@@ -113,7 +152,7 @@ describe("duplicate detection", () => {
 
   it("sends uncertain matches to caretaker review instead of merging", async () => {
     const s = await scenarios.scenarioDuplicateDetection();
-    const r = await submitReport({ qrSlug: "kossuth-b-floor2-washer03", description: "Washer number 3 makes a loud grinding noise", reporterName: "U", reporterEmail: "u@students.fiximperfect.example" });
+    const r = await submitReport({ qrSlug: "kossuth-b-floor2-laundry", description: "Washer number 3 makes a loud grinding noise", reporterName: "U", reporterEmail: "u@students.fiximperfect.example" });
     expect(r.ticketId).not.toBe(s.ticketId);
     expect(r.linkStatus).toBe("pending_review");
     expect(r.ticketStatus).toBe("needs_review");
@@ -121,6 +160,48 @@ describe("duplicate detection", () => {
     expect(rep!.suggested_ticket_id).toBe(s.ticketId);
     expect(Number(rep!.duplicate_confidence)).toBeGreaterThanOrEqual(0.65);
     expect(Number(rep!.duplicate_confidence)).toBeLessThan(0.85);
+  });
+});
+
+describe("location-based duplicate detection", () => {
+  it("keeps different problems in the same room as separate tickets", async () => {
+    const fridge = await submitReport({ qrSlug: "kossuth-b-room-204", equipmentCategory: "Kitchen Appliances", description: "The fridge is not cooling at all", reporterName: "F", reporterEmail: "f@students.fiximperfect.example" });
+    const heat = await submitReport({ qrSlug: "kossuth-b-room-204", equipmentCategory: "Heating", description: "The radiator is cold, no heating", reporterName: "R", reporterEmail: "r@students.fiximperfect.example" });
+    expect(heat.ticketId).not.toBe(fridge.ticketId);
+    expect(heat.linkStatus).toBe("new_ticket");
+    expect([fridge.category, heat.category]).toEqual(["Kitchen Appliances", "Heating"]);
+  });
+
+  it("keeps a washer fault and a dryer fault in the same laundry room apart", async () => {
+    const washer = await submitReport({ qrSlug: "kossuth-b-floor2-laundry", description: "Washer number 2 is leaking water", reporterName: "W", reporterEmail: "w@students.fiximperfect.example" });
+    const dryer = await submitReport({ qrSlug: "kossuth-b-floor2-laundry", description: "Dryer number 1 is leaking water", reporterName: "D", reporterEmail: "d@students.fiximperfect.example" });
+    expect(dryer.ticketId).not.toBe(washer.ticketId);
+  });
+
+  it("links the same problem in the same room reported twice", async () => {
+    const a = await submitReport({ qrSlug: "kossuth-b-room-204", description: "The fridge is not cooling", reporterName: "A", reporterEmail: "a2@students.fiximperfect.example" });
+    const b = await submitReport({ qrSlug: "kossuth-b-room-204", description: "Fridge not cooling, food is warm", reporterName: "B", reporterEmail: "b2@students.fiximperfect.example" });
+    expect(b.ticketId).toBe(a.ticketId);
+    expect(b.linkStatus).toBe("auto_linked");
+  });
+
+  it("does not link the same fault in a different room", async () => {
+    const a = await submitReport({ qrSlug: "kossuth-b-room-204", description: "The radiator is cold, no heating", reporterName: "A", reporterEmail: "a3@students.fiximperfect.example" });
+    const b = await submitReport({ qrSlug: "kossuth-b-room-205", description: "The radiator is cold, no heating", reporterName: "B", reporterEmail: "b3@students.fiximperfect.example" });
+    expect(b.ticketId).not.toBe(a.ticketId);
+  });
+});
+
+describe("caretaker location filters", () => {
+  it("filters tickets by building, floor and room", async () => {
+    await submitReport({ qrSlug: "kossuth-b-room-204", description: "The radiator is cold, no heating", reporterName: "A", reporterEmail: "fl@students.fiximperfect.example" });
+    const { data: room } = await db().from("locations").select("id, building_id").eq("qr_slug", "kossuth-b-room-204").single();
+    const byRoom = await listTickets(db(), { location: room!.id, status: "all" });
+    expect(byRoom.rows.length).toBeGreaterThan(0);
+    expect(byRoom.rows.every((r) => r.locations.room_number === "204")).toBe(true);
+    const byFloor = await listTickets(db(), { building: room!.building_id, floor: 2, status: "all" });
+    expect(byFloor.rows.every((r) => r.locations.floor === 2 && r.buildings.name === "Kossuth Dorm B")).toBe(true);
+    expect(byFloor.total).toBeGreaterThan(byRoom.total);
   });
 });
 
@@ -136,7 +217,7 @@ describe("safety escalation", () => {
   });
 
   it("does not escalate an ordinary issue", async () => {
-    const r = await submitReport({ qrSlug: "kossuth-b-floor2-washer04", description: "The washing machine door is broken.", reporterName: "N", reporterEmail: "n@students.fiximperfect.example" });
+    const r = await submitReport({ qrSlug: "kossuth-b-floor2-laundry", description: "The washing machine door is broken.", reporterName: "N", reporterEmail: "n@students.fiximperfect.example" });
     expect(r.safetyLevel).toBe("none");
     expect(r.priority).not.toBe("critical");
     const { count } = await db().from("emergency_alerts").select("id", { count: "exact", head: true }).eq("ticket_id", r.ticketId);

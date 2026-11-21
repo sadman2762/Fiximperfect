@@ -10,13 +10,13 @@ import { cn } from "@/lib/utils";
 export const dynamic = "force-dynamic";
 
 const DEMO_QR = [
-  { slug: "kossuth-b-floor2-washer03", title: "Washer #3", where: "Kossuth Dorm B · Floor 2", kind: "Asset code", code: "WASHER-003" },
-  { slug: "kossuth-b-floor1-corridor", title: "Corridor East", where: "Kossuth Dorm B · Floor 1", kind: "Location code", code: "KOS-B · F1" },
-  { slug: "kossuth-b-floor2-kitchen", title: "Shared Kitchen", where: "Kossuth Dorm B · Floor 2", kind: "Location code", code: "KOS-B · F2" },
+  { slug: "kossuth-b-floor2-laundry", title: "Laundry Room", where: "Kossuth Dorm B · Floor 2", kind: "Shared space", code: "KOS-B-F2-LAUNDRY" },
+  { slug: "kossuth-b-room-204", title: "Room 204", where: "Kossuth Dorm B · Floor 2", kind: "Room", code: "KOS-B-R204" },
+  { slug: "kossuth-b-floor1-corridor", title: "Corridor East", where: "Kossuth Dorm B · Floor 1", kind: "Shared space", code: "KOS-B-F1-CORRIDOR" },
 ];
 
 const STEPS = [
-  { n: "1", title: "Scan", text: "A QR sticker on the machine tells us exactly where you are. Nothing to fill in." },
+  { n: "1", title: "Scan", text: "One QR sticker per room tells us exactly where you are. Nothing to fill in." },
   { n: "2", title: "Describe", text: "A sentence and a photo. Claude reads both, classifies the fault and checks for danger." },
   { n: "3", title: "Coordinate", text: "Duplicates merge into one ticket, emergencies jump the queue, the right team is assigned." },
   { n: "4", title: "Verify", text: "When it’s marked fixed, you confirm it. If it isn’t, the ticket reopens on its own." },
@@ -30,7 +30,7 @@ const CAPABILITIES = [
 ];
 
 const FEATURES = [
-  { Icon: QrCode, tint: "bg-[#e8f2ff] text-[#0071e3]", title: "Report in under a minute", text: "Every machine and room carries its own QR code. Location and equipment are resolved on the server — students only describe the problem.", wide: true },
+  { Icon: QrCode, tint: "bg-[#e8f2ff] text-[#0071e3]", title: "Report in under a minute", text: "Every room and shared space carries one QR code. The location is resolved on the server — students just say what’s wrong, in their own words.", wide: true },
   { Icon: Copy, tint: "bg-[#eef2ff] text-[#4338ca]", title: "One problem, one ticket", text: "Three students, three wordings, one broken washer. Reports link to a single ticket — everyone still gets their own updates." },
   { Icon: ShieldAlert, tint: "bg-[#fef2f2] text-[#dc2626]", title: "Danger jumps the queue", text: "Deterministic safety rules plus AI. Critical hazards alert caretakers by SMS, call and e-mail — and escalate if nobody answers." },
   { Icon: BadgeCheck, tint: "bg-[#f0fdf4] text-[#16a34a]", title: "Fixed means fixed", text: "Every reporter confirms the repair. A single “still broken” reopens the ticket, history intact." },
@@ -83,7 +83,7 @@ function PhoneMock() {
               <p className="text-[10px] font-medium text-[#5f6672]">Your report</p>
               <p className="mt-1 text-[14px] leading-snug font-medium text-[#0b1f3a]">“The laundry machine door latch seems damaged.”</p>
               <p className="mt-2 flex items-center gap-1 text-[11px] text-[#5f6672]">
-                <MapPin className="size-3" aria-hidden /> Kossuth Dorm B · Floor 2 · Washer #3
+                <MapPin className="size-3" aria-hidden /> Kossuth Dorm B · Floor 2 · Laundry Room
               </p>
             </div>
             <div className="rounded-2xl border border-[#e1e5eb] bg-white p-3.5">
@@ -231,7 +231,7 @@ export default async function Home() {
           <div className="mx-auto max-w-[1120px] text-center">
             <p className="eyebrow">Try it now</p>
             <h2 className="title-lg mt-3">Pick a code. Be the student.</h2>
-            <p className="mx-auto mt-3 max-w-xl text-[17px] text-[#454b55]">These are the stickers on the equipment. Tap one to open the reporting page — no sign-in, no app.</p>
+            <p className="mx-auto mt-3 max-w-xl text-[17px] text-[#454b55]">These are the stickers on the doors — one per room or shared space. Tap one to open the reporting page — no sign-in, no app.</p>
             <ul className="mt-12 grid gap-5 sm:grid-cols-3">
               {DEMO_QR.map((q, i) => (
                 <li key={q.slug}>

@@ -2,7 +2,6 @@ import "server-only";
 import { z } from "zod";
 import { SETTING_BOUNDS, type AppSettings } from "@/lib/settings";
 
-const slug = z.string().trim().regex(/^[a-z0-9-]{3,80}$/, "lowercase letters, digits and dashes (3–80)");
 const money = z
   .string()
   .trim()
@@ -25,8 +24,10 @@ export const ADMIN_ENTITIES = {
     schema: z.object({
       building_id: z.string().uuid(),
       floor: z.coerce.number().int().min(-5).max(100),
-      area_name: z.string().trim().min(2).max(120),
-      qr_slug: slug,
+      /** Room number for rooms ("204"); empty for shared spaces. */
+      room_number: z.string().trim().max(20).regex(/^[A-Za-z0-9 .-]*$/, "letters, digits, spaces, dots and dashes").optional().nullable().transform((v) => v || null),
+      /** Display name; defaults to "Room <number>" for rooms. */
+      area_name: z.string().trim().max(120).optional().nullable().transform((v) => v || null),
       location_type: z.enum(["laundry", "kitchen", "corridor", "bathroom", "common_room", "bedroom", "technical", "other"]),
     }),
   },
@@ -40,7 +41,6 @@ export const ADMIN_ENTITIES = {
       model: optText(120),
       building_id: z.string().uuid(),
       location_id: z.string().uuid(),
-      qr_slug: slug.or(z.literal("").transform(() => null)).nullable().optional(),
       installation_date: date,
       purchase_date: date,
       purchase_cost: money,

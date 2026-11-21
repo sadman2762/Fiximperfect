@@ -21,10 +21,12 @@ import { sendNotification } from "@/lib/notifications/dispatcher";
 import { reportReceived, staffTicketAlert } from "@/lib/notifications/templates";
 import { caretakersFor, studentEmailContext, ticketUrl } from "@/lib/notifications/recipients";
 import type { Priority, QrContext } from "@/types/domain";
+import { placeName, fullLocation } from "@/lib/locations/label";
 
 export interface SubmitReportInput {
   qrSlug: string;
-  selectedAssetId?: string | null;
+  /** Optional equipment category the student picked; a hint for classification. */
+  equipmentCategory?: string | null;
   description: string;
   additionalDetails?: string | null;
   reporterName: string;
@@ -76,11 +78,9 @@ export async function submitReport(input: SubmitReportInput): Promise<SubmitRepo
   const qr = await resolveQr(db, input.qrSlug);
   if (!qr) throw new SubmissionError("This QR code is not recognised.", 404);
 
-  let assetId = qr.asset?.id ?? null;
-  if (!assetId && input.selectedAssetId) {
-    if (!qr.locationAssets.some((a) => a.id === input.selectedAssetId)) throw new SubmissionError("The selected equipment is not at this location.");
-    assetId = input.selectedAssetId;
-  }
+  // A QR code identifies a location only. Equipment is identified later (by the
+  // classifier, from the equipment registered in this location) or by staff.
+  const equipmentCategory = input.equipmentCategory?.trim() || null;
 
   let imageType: ImageMediaType | null = null;
   if (input.image && input.image.byteLength > 0) imageType = validateImage(input.image);
@@ -89,8 +89,10 @@ export async function submitReport(input: SubmitReportInput): Promise<SubmitRepo
   const { data: report, error } = await db
     .from("reports")
     .insert({
+      building_id: qr.building.id,
       location_id: qr.location.id,
-      asset_id: assetId,
+      asset_id: null,
+      equipment_category: equipmentCategory,
       reporter_name: input.reporterName.trim(),
       reporter_email: input.reporterEmail.trim().toLowerCase(),
       description: input.description.trim(),
@@ -114,7 +116,8 @@ export async function submitReport(input: SubmitReportInput): Promise<SubmitRepo
     reportNumber: report.report_number,
     submittedAt: report.created_at,
     qr,
-    assetId,
+    assetId: null,
+    equipmentCategory,
     description: input.description.trim(),
     additionalDetails: input.additionalDetails?.trim() || null,
     image: input.image && imageType ? { base64: Buffer.from(input.image).toString("base64"), mediaType: imageType } : null,
@@ -146,7 +149,7 @@ export async function submitReport(input: SubmitReportInput): Promise<SubmitRepo
         kind,
         ticketNumber: outcome.ticketNumber,
         title: outcome.title,
-        location: `${qr.building.name}, floor ${qr.location.floor}, ${qr.location.area_name}`,
+        location: fullLocation(qr.building.name, qr.location),
         detail,
         url: ticketUrl(outcome.ticketId),
       });
@@ -174,6 +177,7 @@ interface ProcessInput {
   submittedAt: string;
   qr: QrContext;
   assetId: string | null;
+  equipmentCategory?: string | null;
   description: string;
   additionalDetails: string | null;
   image: ReportContext["image"];
@@ -192,15 +196,17 @@ export async function processReport(db: SupabaseClient, p: ProcessInput) {
   const { data: cats } = await db.from("categories").select("name").order("name");
   const categories = (cats ?? []).map((c) => c.name as string);
 
-  const selectedAsset =
-    p.qr.asset ?? (p.assetId ? (p.qr.locationAssets.find((a) => a.id === p.assetId) as QrContext["asset"] | undefined) ?? null : null);
+  const selectedAsset = p.assetId ? (p.qr.locationAssets.find((a) => a.id === p.assetId) ?? null) : null;
+  const studentCategory = p.equipmentCategory && categories.includes(p.equipmentCategory) ? p.equipmentCategory : null;
+  const place = placeName(p.qr.location);
   const ctx: ReportContext = {
     description: p.description,
     additionalDetails: p.additionalDetails,
     image: p.image,
     buildingName: p.qr.building.name,
     floor: p.qr.location.floor,
-    areaName: p.qr.location.area_name,
+    areaName: place,
+    studentCategory,
     asset: selectedAsset ? { asset_code: selectedAsset.asset_code, asset_name: selectedAsset.asset_name, category: selectedAsset.category } : null,
     locationAssets: p.qr.locationAssets.map((a) => ({ asset_code: a.asset_code, asset_name: a.asset_name, category: a.category })),
     categories,
@@ -215,7 +221,7 @@ export async function processReport(db: SupabaseClient, p: ProcessInput) {
   const rules = evaluateSafetyRules(text, classification?.safety_flags ?? []);
   const safety: CombinedSafety = combineSafety(rules, aiSafety);
 
-  const category = classification?.category ?? selectedAsset?.category ?? (categories.includes("General") ? "General" : categories[0]);
+  const category = classification?.category ?? studentCategory ?? selectedAsset?.category ?? (categories.includes("General") ? "General" : categories[0]);
   const lowConfidence = !classification || classification.confidence < settings.classification_review_threshold;
 
   // An asset chosen by the classifier from the location's registered assets.
@@ -247,7 +253,8 @@ export async function processReport(db: SupabaseClient, p: ProcessInput) {
     issue: classification?.issue ?? p.description.slice(0, 80),
     asset_code: assetCode,
     asset_name: assetName,
-    area_name: p.qr.location.area_name,
+    location_id: p.qr.location.id,
+    area_name: place,
     floor: p.qr.location.floor,
     submitted_at: p.submittedAt,
   };
@@ -263,7 +270,7 @@ export async function processReport(db: SupabaseClient, p: ProcessInput) {
             safety,
             description: p.description,
             buildingName: p.qr.building.name,
-            areaName: p.qr.location.area_name,
+            areaName: place,
             floor: p.qr.location.floor,
             assetName,
             teams: directory.teams,
@@ -323,7 +330,7 @@ export async function processReport(db: SupabaseClient, p: ProcessInput) {
         ticket: {
           category,
           subcategory: classification?.subcategory ?? null,
-          title: classification?.title ?? `${assetName ?? p.qr.location.area_name}: ${p.description.slice(0, 80)}`,
+          title: classification?.title ?? `${assetName ?? place}: ${p.description.slice(0, 80)}`,
           description: classification?.summary ?? p.description,
           priority,
           priority_reason: priorityReason,

@@ -3,6 +3,7 @@ import { ChevronDown, ChevronUp, Users } from "lucide-react";
 import { PriorityBadge, SafetyBadge, StatusBadge } from "@/components/shared/badges";
 import { EmptyState, formatDate } from "@/components/shared/ui-bits";
 import type { TicketListRow } from "@/lib/tickets/queries";
+import { placeName } from "@/lib/locations/label";
 
 type SortKey = "ticket_number" | "priority" | "status" | "created_at";
 
@@ -53,7 +54,7 @@ export function TicketTable({
                   <span className="font-mono text-[11px] text-muted-foreground">{t.ticket_number}</span>
                   <span className="block text-[14px] leading-snug font-medium group-hover:text-[#005bb5]">{t.title}</span>
                   <span className="mt-0.5 block text-[12px] text-muted-foreground">
-                    {t.buildings.name} · Floor {t.locations.floor} · {t.locations.area_name}
+                    {t.buildings.name} · Floor {t.locations.floor} · {placeName(t.locations)}
                   </span>
                 </Link>
                 {t.safety_level !== "none" ? (

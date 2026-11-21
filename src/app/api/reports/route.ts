@@ -20,7 +20,7 @@ export const POST = handleRoute(async (req: Request) => {
   const form = await req.formData();
   const fields = ReportSubmissionSchema.parse({
     qrSlug: form.get("qrSlug"),
-    selectedAssetId: form.get("selectedAssetId") || null,
+    equipmentCategory: form.get("equipmentCategory") || null,
     description: form.get("description"),
     additionalDetails: form.get("additionalDetails") || null,
     reporterName: form.get("reporterName"),
