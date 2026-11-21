@@ -15,7 +15,7 @@ export default async function ReportPage({ params }: { params: Promise<{ qrSlug:
   if (!qr) notFound();
 
   return (
-    <StudentShell>
+    <StudentShell emergencyAt={qr.location.qr_slug}>
       <section className="rise text-center">
         <p className="eyebrow">Report a problem</p>
         <h1 className="mt-3 text-[38px] leading-none font-bold tracking-[-0.035em]">{qr.asset ? qr.asset.asset_name : qr.location.area_name}</h1>

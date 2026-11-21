@@ -1,6 +1,6 @@
 import Link from "next/link";
 import QRCode from "qrcode";
-import { ArrowRight, BarChart3, BadgeCheck, Copy, MapPin, QrCode, ShieldAlert, Sparkles, Check } from "lucide-react";
+import { ArrowRight, BarChart3, BadgeCheck, Copy, MapPin, QrCode, ShieldAlert, Siren, Sparkles, Check } from "lucide-react";
 import { appUrl } from "@/lib/env";
 import { buttonVariants } from "@/components/ui/button";
 import { AppMark, Wordmark } from "@/components/shared/app-mark";
@@ -142,9 +142,14 @@ export default async function Home() {
             <a href="#how" className="hover:text-white">How it works</a>
             <a href="#qr" className="hover:text-white">Try it</a>
           </nav>
-          <Link href="/login" className={cn(buttonVariants({ size: "sm" }), "ml-auto")}>
-            Staff sign in
-          </Link>
+          <div className="ml-auto flex items-center gap-2">
+            <Link href="/emergency" className={cn(buttonVariants({ size: "sm" }), "bg-[#dc2626] hover:bg-[#b91c1c]")}>
+              <Siren aria-hidden /> Emergency
+            </Link>
+            <Link href="/login" className={cn(buttonVariants({ size: "sm", variant: "outline" }), "hidden sm:inline-flex")}>
+              Staff sign in
+            </Link>
+          </div>
         </div>
       </header>
 
@@ -165,6 +170,9 @@ export default async function Home() {
             <a href="#qr" className={cn(buttonVariants({ size: "lg" }), "h-12 px-7 text-[15px]")}>
               Report a problem
             </a>
+            <Link href="/emergency" className={cn(buttonVariants({ size: "lg" }), "h-12 bg-[#dc2626] px-7 text-[15px] shadow-[0_6px_16px_-8px_rgba(220,38,38,0.8)] hover:bg-[#b91c1c]")}>
+              <Siren aria-hidden /> Report an emergency
+            </Link>
             <Link href="/login" className={cn(buttonVariants({ size: "lg", variant: "outline" }), "h-12 px-7 text-[15px]")}>
               Open the staff app <ArrowRight aria-hidden />
             </Link>
