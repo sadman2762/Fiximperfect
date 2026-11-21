@@ -65,3 +65,4 @@ export function sumMoney(...amounts: string[]): string {
   const s = cents.toString().padStart(3, "0");
   return `${s.slice(0, -2)}.${s.slice(-2)}`;
 }
+

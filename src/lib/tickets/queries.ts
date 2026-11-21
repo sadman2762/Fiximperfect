@@ -84,3 +84,4 @@ export async function filterOptions(db: SupabaseClient) {
     locations: (l.data ?? []) as { id: string; building_id: string; floor: number; area_name: string; room_number: string | null }[],
   };
 }
+

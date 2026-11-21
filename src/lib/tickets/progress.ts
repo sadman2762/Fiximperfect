@@ -68,3 +68,4 @@ export const TONE_COLORS: Record<ProgressTone, { band: string; ink: string; acce
   done: { band: "#e6f4f0", ink: "#183247", accent: "#183247" },
   critical: { band: "#fef2f2", ink: "#7f1d1d", accent: "#dc2626" },
 };
+

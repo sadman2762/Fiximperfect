@@ -48,3 +48,4 @@ export default async function AckPage({ params }: { params: Promise<{ token: str
     </StudentShell>
   );
 }
+

@@ -52,3 +52,4 @@ export async function loadSettings(db: SupabaseClient): Promise<AppSettings> {
   }
   return out;
 }
+

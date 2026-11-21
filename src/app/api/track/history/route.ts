@@ -29,3 +29,4 @@ export const POST = handleRoute(async (req: Request) => {
   }
   return NextResponse.json({ message: "If reports exist for this address, a link is on its way. Check your inbox." });
 });
+

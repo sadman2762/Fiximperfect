@@ -140,3 +140,4 @@ describe("asset replacement recommendation", () => {
     expect(deterministicRecommendation(s)).not.toContain("replacement assessment is recommended");
   });
 });
+

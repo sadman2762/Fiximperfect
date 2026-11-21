@@ -65,3 +65,4 @@ export function formatHours(h: number | null | undefined) {
   if (h < 48) return `${h.toFixed(1)} h`;
   return `${(h / 24).toFixed(1)} days`;
 }
+

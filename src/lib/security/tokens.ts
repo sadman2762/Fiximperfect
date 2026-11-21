@@ -26,3 +26,4 @@ export function safeEqual(a: string, b: string): boolean {
 export function hmac(secret: string, value: string): string {
   return createHmac("sha256", secret).update(value).digest("base64url");
 }
+

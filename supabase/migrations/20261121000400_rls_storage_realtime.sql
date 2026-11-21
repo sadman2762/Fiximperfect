@@ -168,3 +168,4 @@ begin
     alter publication supabase_realtime add table public.tickets, public.emergency_alerts, public.reports;
   end if;
 end $$;
+

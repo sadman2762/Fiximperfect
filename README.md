@@ -99,3 +99,4 @@ npx supabase stop
 ## Tech stack
 
 Next.js (App Router), TypeScript, Tailwind CSS, Supabase (Postgres, Auth, Storage, Realtime), Anthropic SDK, Zod, Recharts, Resend, Twilio.
+

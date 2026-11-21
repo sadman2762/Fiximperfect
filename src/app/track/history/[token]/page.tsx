@@ -27,3 +27,4 @@ export default async function HistoryPage({ params }: { params: Promise<{ token:
     </StudentShell>
   );
 }
+

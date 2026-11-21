@@ -45,3 +45,4 @@ export function AssetNarrative({ assetId }: { assetId: string }) {
     </div>
   );
 }
+

@@ -110,3 +110,4 @@ export const SettingsSchema = z.object(
   (v) => v.duplicate_auto_link_threshold === undefined || v.duplicate_review_threshold === undefined || v.duplicate_review_threshold < v.duplicate_auto_link_threshold,
   "The review threshold must be lower than the auto-link threshold",
 );
+

@@ -19,3 +19,4 @@ export const GET = handleRoute(async (req: Request, ctx: { params: Promise<{ slu
   const svg = await QRCode.toString(url, { type: "svg", margin: 2, errorCorrectionLevel: "M" });
   return new Response(svg, { headers: { "content-type": "image/svg+xml", "content-disposition": `inline; filename="qr-${slug}.svg"` } });
 });
+

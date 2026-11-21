@@ -17,3 +17,4 @@ alter table public.student_access_tokens enable row level security;
 
 -- Staff "acknowledge" from the dashboard and the escalation job need quick lookup.
 create index tickets_escalation_idx on public.tickets(escalation_status) where escalation_status in ('pending', 'alerting');
+

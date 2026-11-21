@@ -161,3 +161,4 @@ describe("public endpoint protections", () => {
     expect(statuses.at(-1)).toBe(429);
   });
 });
+

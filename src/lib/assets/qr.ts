@@ -49,3 +49,4 @@ export async function resolveQr(db: SupabaseClient, slug: string): Promise<QrCon
     locationAssets: assets ?? [],
   };
 }
+

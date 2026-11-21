@@ -102,3 +102,4 @@ export interface TeamOption {
   open_tickets: number;
   is_manual_review_queue: boolean;
 }
+

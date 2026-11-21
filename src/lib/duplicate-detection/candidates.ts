@@ -91,3 +91,4 @@ export async function retrieveCandidates(
       .map((x) => x.description.slice(0, 400)),
   }));
 }
+

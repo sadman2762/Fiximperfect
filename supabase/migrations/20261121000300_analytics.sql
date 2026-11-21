@@ -222,3 +222,4 @@ $$;
 grant execute on function public.asset_intelligence(uuid) to authenticated, service_role;
 grant execute on function public.analytics_overview(timestamptz) to authenticated, service_role;
 grant execute on function public.analytics_breakdowns(timestamptz) to authenticated, service_role;
+

@@ -347,3 +347,4 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
     </>
   );
 }
+

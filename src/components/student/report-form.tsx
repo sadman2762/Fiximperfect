@@ -323,3 +323,4 @@ export function ReportForm({ qrSlug }: { qrSlug: string }) {
     </form>
   );
 }
+

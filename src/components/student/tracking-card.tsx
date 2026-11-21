@@ -92,3 +92,4 @@ export function TrackingCard({ view, emailsHref }: { view: StudentView; emailsHr
     </article>
   );
 }
+

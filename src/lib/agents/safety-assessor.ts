@@ -37,3 +37,4 @@ export async function assessSafety(ctx: ReportContext): Promise<AgentResult<Safe
   });
   return { ...res, output: SafetyChecked.parse(res.output) };
 }
+

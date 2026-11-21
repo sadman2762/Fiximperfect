@@ -43,3 +43,4 @@ export const PATCH = handleRoute(async (req: Request) => {
   await db.from("audit_logs").insert({ actor_id: admin.id, actor_label: admin.full_name, action: "admin.staff_update", entity_type: "profile", entity_id: id, details: v });
   return NextResponse.json({ ok: true });
 });
+

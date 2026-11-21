@@ -9,3 +9,4 @@ export default function LoginPage() {
   // Demo credentials are only shown when demo tools are enabled.
   return <LoginForm showDemo={env().DEMO_TOOLS_ENABLED === "true"} />;
 }
+

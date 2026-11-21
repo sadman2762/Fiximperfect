@@ -36,3 +36,4 @@ export function tinyPng(): Uint8Array {
   // Pre-built minimal valid PNG (1×1 transparent pixel).
   return Uint8Array.from(Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==", "base64"));
 }
+

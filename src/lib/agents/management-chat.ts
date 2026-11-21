@@ -169,3 +169,4 @@ async function mockAnswer(question: string, t: ReturnType<typeof buildTools>, lo
   }
   return { mode: "mock" as const, answer: `[Mock mode — rule-based answer from live database records]\n${answer}`, tools: log };
 }
+

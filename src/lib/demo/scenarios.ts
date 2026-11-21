@@ -149,3 +149,4 @@ export async function scenarioPredictiveMaintenance() {
     passed: s.replacement_review && s.repair_to_replacement_ratio === 110.5,
   };
 }
+

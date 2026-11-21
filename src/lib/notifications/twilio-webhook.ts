@@ -14,3 +14,4 @@ export async function verifyTwilioRequest(req: Request): Promise<Record<string, 
   const publicUrl = `${env().NEXT_PUBLIC_APP_URL.replace(/\/$/, "")}${url.pathname}${url.search}`;
   return twilio.validateRequest(token, signature, publicUrl, params) ? params : null;
 }
+

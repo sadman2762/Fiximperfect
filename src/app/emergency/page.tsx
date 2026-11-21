@@ -49,3 +49,4 @@ export default async function EmergencyPage({ searchParams }: { searchParams: Pr
     </StudentShell>
   );
 }
+

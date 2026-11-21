@@ -270,3 +270,4 @@ export function priorityFloorForSafety(level: SafetyLevel): Priority {
   if (level === "elevated") return "high";
   return "low";
 }
+

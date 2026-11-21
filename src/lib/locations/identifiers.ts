@@ -35,3 +35,4 @@ export async function firstFree(base: string, taken: (candidate: string) => Prom
   }
   throw new Error("could not generate a unique identifier");
 }
+

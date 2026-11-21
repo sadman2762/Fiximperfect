@@ -379,3 +379,4 @@ insert into public.app_settings (key, value, description) values
   ('replacement_cost_ratio_threshold', '100', 'Repair-to-replacement ratio (%) that triggers a replacement review.'),
   ('feedback_token_ttl_days', '14', 'Days a resolution feedback link remains valid.'),
   ('backlog_alert_threshold', '25', 'Open tickets per building that trigger a management backlog notification.');
+

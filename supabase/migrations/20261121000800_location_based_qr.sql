@@ -237,3 +237,4 @@ $$;
 
 revoke execute on function public.attach_report_to_ticket(jsonb) from public, anon, authenticated;
 grant execute on function public.attach_report_to_ticket(jsonb) to service_role;
+

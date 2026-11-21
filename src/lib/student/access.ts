@@ -118,3 +118,4 @@ export async function historyByToken(token: string) {
   const views = await Promise.all((reports ?? []).map((r) => studentViewByReportId(r.id)));
   return { email: t.reporter_email as string, reports: views.filter((v): v is StudentView => v !== null) };
 }
+

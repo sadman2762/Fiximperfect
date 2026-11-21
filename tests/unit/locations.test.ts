@@ -45,3 +45,4 @@ describe("report submission input", () => {
     expect(parsed).not.toHaveProperty("assetId");
   });
 });
+

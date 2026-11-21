@@ -39,3 +39,4 @@ export function LiveRefresh({ tables = ["tickets", "emergency_alerts", "reports"
   }, [router, tables, pollMs]);
   return null;
 }
+

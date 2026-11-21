@@ -376,3 +376,4 @@ describe("demo reset", () => {
     expect(count).toBe(17); // 16 seeded history tickets + 1 scenario ticket
   });
 });
+

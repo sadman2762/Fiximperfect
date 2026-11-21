@@ -33,3 +33,4 @@ export function clientIp(req: Request): string {
   const fwd = req.headers.get("x-forwarded-for");
   return fwd?.split(",")[0]?.trim() || req.headers.get("x-real-ip") || "unknown";
 }
+

@@ -72,3 +72,4 @@ for (const p of paths) {
 }
 ws.close();
 proc.kill();
+

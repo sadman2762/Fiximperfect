@@ -126,3 +126,4 @@ export async function assetNarrative(stats: AssetStats, history: { ticket_number
   });
   return { mode: "live" as const, ...res.output };
 }
+

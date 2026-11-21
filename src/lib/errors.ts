@@ -17,3 +17,4 @@ export class AuthError extends Error {
     super(message);
   }
 }
+

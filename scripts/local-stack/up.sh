@@ -75,3 +75,4 @@ KEYS="$(JWT_SECRET="$JWT_SECRET" node "$ROOT/scripts/local-stack/keys.mjs")"
 echo "$KEYS" > "$STATE/keys.env"
 echo "[local-stack] ready. Keys written to .local-stack/keys.env"
 echo "$KEYS" | sed -E 's/(KEY=.{16}).*/\1.../'
+

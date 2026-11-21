@@ -34,3 +34,4 @@ export const STATUS_LABELS: Record<TicketStatus, string> = {
   reopened: "Reopened",
   closed: "Closed",
 };
+

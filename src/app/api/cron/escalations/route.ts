@@ -17,3 +17,4 @@ export async function GET(req: Request) {
   const summary = await runEscalationCheck();
   return NextResponse.json({ checkedAt: new Date().toISOString(), summary });
 }
+

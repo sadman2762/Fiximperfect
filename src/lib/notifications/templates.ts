@@ -168,3 +168,4 @@ export function historyLink(p: { url: string }) {
   const lines = ["Use the link below to see the maintenance reports submitted with this email address. The link expires in 24 hours."];
   return { subject, text: `${lines.join("\n")}\n\n${p.url}`, html: layout(subject, lines, [{ label: "View my reports", url: p.url }]) };
 }
+

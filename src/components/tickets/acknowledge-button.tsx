@@ -25,3 +25,4 @@ export function AcknowledgeButton({ ticketId }: { ticketId: string }) {
     </button>
   );
 }
+

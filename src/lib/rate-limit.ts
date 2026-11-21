@@ -18,3 +18,4 @@ export async function rateLimit(kind: string, key: string, max: number, windowSe
   }
   return data === true;
 }
+

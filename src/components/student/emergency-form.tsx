@@ -226,3 +226,4 @@ export function EmergencyForm({ buildings, initialSlug }: { buildings: Emergency
     </form>
   );
 }
+

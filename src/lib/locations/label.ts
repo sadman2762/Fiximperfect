@@ -19,3 +19,4 @@ export function floorAndPlace(l: LocationLike): string {
 export function fullLocation(building: string, l: LocationLike): string {
   return `${building} — Floor ${l.floor} — ${placeName(l)}`;
 }
+

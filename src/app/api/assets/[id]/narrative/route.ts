@@ -27,3 +27,4 @@ export const POST = handleRoute(async (_req: Request, ctx: { params: Promise<{ i
     throw new HttpError(503, `AI explanation unavailable: ${e instanceof Error ? e.message : "error"}. The figures above remain valid.`);
   }
 });
+

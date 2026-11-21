@@ -30,3 +30,4 @@ export function decideLink(a: DuplicateAssessment, t: DuplicateThresholds): Link
   }
   return { decision: "new", matchedTicketNumber: null, confidence: a.confidence, reason: a.reason };
 }
+

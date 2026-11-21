@@ -16,3 +16,4 @@ export function LevelBadge({ level }: { level: "replacement_review" | "watch" | 
   return <span className="text-xs text-muted-foreground">OK</span>;
 }
 
+

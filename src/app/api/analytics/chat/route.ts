@@ -20,3 +20,4 @@ export const POST = handleRoute(async (req: Request) => {
     throw new HttpError(503, "The assistant is unavailable right now. Dashboard figures are unaffected.");
   }
 });
+

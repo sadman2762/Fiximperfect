@@ -43,3 +43,4 @@ export default async function QrLabelsPage() {
     </div>
   );
 }
+

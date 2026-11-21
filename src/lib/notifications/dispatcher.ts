@@ -154,3 +154,4 @@ export async function sendNotification(msg: OutgoingMessage): Promise<DeliveryRe
 export async function sendAll(msgs: OutgoingMessage[]): Promise<DeliveryResult[]> {
   return Promise.all(msgs.map((m) => sendNotification(m)));
 }
+

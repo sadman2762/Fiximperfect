@@ -29,3 +29,4 @@ export default async function TrackPage({ params }: { params: Promise<{ token: s
     </StudentShell>
   );
 }
+

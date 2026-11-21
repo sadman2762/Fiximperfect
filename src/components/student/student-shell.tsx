@@ -34,3 +34,4 @@ export function StudentShell({ children, emergencyAt, hideEmergency = false }: {
     </div>
   );
 }
+

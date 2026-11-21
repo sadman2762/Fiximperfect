@@ -116,3 +116,4 @@ export interface QrContext {
   /** Equipment registered at this location (internal: helps the classifier, never shown as a requirement). */
   locationAssets: Pick<AssetRow, "id" | "asset_code" | "asset_name" | "category">[];
 }
+

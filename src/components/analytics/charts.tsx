@@ -106,3 +106,4 @@ export function TrendLines({ data, xKey, series }: { data: Record<string, unknow
     </div>
   );
 }
+

@@ -18,3 +18,4 @@ export const GET = handleRoute(async (_req: Request, ctx: { params: Promise<{ re
   if (!url) throw new HttpError(404, "Image unavailable");
   return NextResponse.redirect(url, { status: 302, headers: { "cache-control": "private, no-store" } });
 });
+

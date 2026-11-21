@@ -6,3 +6,4 @@ if (proxied && typeof setGlobalProxyFromEnv === "function") {
   setGlobalProxyFromEnv(process.env);
   console.log("[startup] outbound requests use the proxy from HTTPS_PROXY");
 }
+

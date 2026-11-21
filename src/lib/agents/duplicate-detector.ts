@@ -86,3 +86,4 @@ Is the new report a duplicate of one of these candidates?`,
   }
   return result;
 }
+

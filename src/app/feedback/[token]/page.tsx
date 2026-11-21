@@ -44,3 +44,4 @@ function Message({ title, text }: { title: string; text: string }) {
     </div>
   );
 }
+

@@ -48,3 +48,4 @@ export NEXT_PUBLIC_APP_URL="$URL"
 export NODE_USE_ENV_PROXY=1
 export NEXT_TELEMETRY_DISABLED=1
 exec npx next start -H 0.0.0.0 -p "$PORT"
+

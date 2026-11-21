@@ -413,3 +413,4 @@ grant execute on function public.attach_report_to_ticket(jsonb) to service_role;
 grant execute on function public.merge_ticket_into(uuid, uuid, uuid, text) to service_role;
 grant execute on function public.submit_resolution_feedback(uuid, public.feedback_response, text) to service_role;
 grant execute on function public.check_rate_limit(text, integer, integer) to service_role;
+

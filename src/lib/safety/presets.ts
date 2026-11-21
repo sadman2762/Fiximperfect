@@ -23,3 +23,4 @@ export const EMERGENCY_PRESETS: EmergencyPreset[] = [
   { id: "flood", label: "Flooding", icon: "🌊", text: "Water is pouring across the whole floor.", level: "critical" },
   { id: "power", label: "Power cut", icon: "🔌", text: "Power cut: the whole floor has no electricity.", level: "elevated" },
 ];
+

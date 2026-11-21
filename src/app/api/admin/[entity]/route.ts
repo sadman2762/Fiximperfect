@@ -86,3 +86,4 @@ export const DELETE = handleRoute(async (req: Request, ctx: Ctx) => {
   await audit(staff, "admin.delete", e.table, id, null);
   return NextResponse.json({ ok: true });
 });
+

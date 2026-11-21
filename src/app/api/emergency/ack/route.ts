@@ -11,3 +11,4 @@ export const POST = handleRoute(async (req: Request) => {
   if (!result) throw new HttpError(404, "Invalid acknowledgement link.");
   return NextResponse.json({ ok: true, ...result });
 });
+

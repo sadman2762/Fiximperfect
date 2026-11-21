@@ -99,3 +99,4 @@ export function DeliveryBadge({ status }: { status: string }) {
   };
   return <span className={cn(pill, map[status] ?? TONE.grey)}>{label[status] ?? status}</span>;
 }
+

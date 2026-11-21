@@ -16,3 +16,4 @@ export const EQUIPMENT_CATEGORIES = [
 
 export type EquipmentCategory = (typeof EQUIPMENT_CATEGORIES)[number]["value"];
 export const EQUIPMENT_CATEGORY_VALUES = EQUIPMENT_CATEGORIES.map((c) => c.value) as [EquipmentCategory, ...EquipmentCategory[]];
+

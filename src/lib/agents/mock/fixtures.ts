@@ -223,3 +223,4 @@ export function mockTriage(
     assignment_reason: `[Mock fixture] ${team} is responsible for ${classification.category}.`,
   };
 }
+

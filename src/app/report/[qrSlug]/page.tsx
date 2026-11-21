@@ -46,3 +46,4 @@ export default async function ReportPage({ params }: { params: Promise<{ qrSlug:
     </StudentShell>
   );
 }
+

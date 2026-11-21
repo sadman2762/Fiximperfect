@@ -163,3 +163,4 @@ export function AiAnalysisPanel({ analysis }: { analysis: Analysis | null }) {
     </div>
   );
 }
+

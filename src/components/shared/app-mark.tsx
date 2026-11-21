@@ -20,3 +20,4 @@ export function Wordmark({ className, onDark = false }: { className?: string; on
     </span>
   );
 }
+

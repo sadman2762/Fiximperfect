@@ -51,3 +51,4 @@ Status as of 2026-11-21. ✅ = implemented **and** verified by automated tests o
 - ✅ `npm run demo:scenarios` passes all four scenarios
 - ⬜ Browser-automation tests (Playwright unavailable through proxy)
 - ⬜ Actual Vercel deployment (instructions in README)
+

@@ -32,3 +32,4 @@ $$;
 
 revoke execute on function public.demo_reset() from public, anon, authenticated;
 grant execute on function public.demo_reset() to service_role;
+

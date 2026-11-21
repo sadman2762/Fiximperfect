@@ -36,3 +36,4 @@ export const POST = handleRoute(async (_req: Request, ctx: { params: Promise<{ a
       throw new HttpError(404, "Unknown demo action");
   }
 });
+

@@ -34,3 +34,4 @@ export async function teamIdsFor(staffId: string): Promise<string[]> {
   const { data } = await adminClient().from("team_members").select("team_id").eq("profile_id", staffId);
   return (data ?? []).map((r) => r.team_id as string);
 }
+

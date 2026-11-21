@@ -281,3 +281,4 @@ export async function seedDemo() {
     categories: cats!.length,
   };
 }
+

@@ -121,3 +121,4 @@ describe("student emergency buttons", () => {
     expect(evaluateSafetyRules(p.text).level).toBe(p.level);
   });
 });
+
