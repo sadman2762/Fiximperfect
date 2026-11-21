@@ -29,6 +29,7 @@ interface Result {
   category: string;
   priority: Priority;
   safetyLevel: string;
+  safetyAdvice?: string | null;
   linkedReports: number;
   linkStatus: string;
   trackingUrl: string;
@@ -87,11 +88,19 @@ export function ReportForm({ qrSlug, assetName, locationAssets }: { qrSlug: stri
     return (
       <section aria-live="polite" className="space-y-4">
         {result.safetyLevel === "critical" ? (
-          <div className="rise flex gap-3 rounded-2xl bg-gradient-to-br from-[#ff453a] to-[#d70015] p-4 text-white shadow-[0_12px_30px_-12px_rgba(215,0,21,0.6)]">
+          <div className="rise flex gap-3 rounded-xl bg-gradient-to-br from-[#ff453a] to-[#d70015] p-4 text-white shadow-[0_12px_30px_-12px_rgba(215,0,21,0.6)]">
             <ShieldAlert className="mt-0.5 size-5 shrink-0" aria-hidden />
             <div className="text-sm">
               <p className="font-semibold">Safety hazard detected — staff are being alerted now.</p>
-              <p className="mt-1 opacity-90">Keep away from the area. If anyone is in immediate danger, call your local emergency number.</p>
+              <p className="mt-1 opacity-90">{result.safetyAdvice ?? "Keep away from the area."} If anyone is in immediate danger, call 112.</p>
+            </div>
+          </div>
+        ) : result.safetyAdvice ? (
+          <div className="rise flex gap-3 rounded-xl border border-[#fde3b6] bg-[#fff4e0] p-4 text-[#7a4300]">
+            <ShieldAlert className="mt-0.5 size-5 shrink-0" aria-hidden />
+            <div className="text-sm">
+              <p className="font-semibold">Staff have been told this needs quick attention.</p>
+              <p className="mt-1">{result.safetyAdvice}</p>
             </div>
           </div>
         ) : null}
@@ -107,7 +116,7 @@ export function ReportForm({ qrSlug, assetName, locationAssets }: { qrSlug: stri
           </p>
         </div>
 
-        <dl className="rise rise-2 divide-y divide-black/[0.06] overflow-hidden rounded-2xl bg-card text-[15px] surface">
+        <dl className="rise rise-2 divide-y divide-[#e1e5eb] overflow-hidden rounded-xl bg-card text-[15px] surface">
           {[
             ["Your report", <span key="r" className="font-mono text-[14px]">{result.reportNumber}</span>],
             ["Ticket", <span key="t" className="font-mono text-[14px]">{result.ticketNumber}</span>],
@@ -123,18 +132,18 @@ export function ReportForm({ qrSlug, assetName, locationAssets }: { qrSlug: stri
           ))}
         </dl>
 
-        <div className="rise rise-3 overflow-hidden rounded-2xl bg-card surface">
+        <div className="rise rise-3 overflow-hidden rounded-xl bg-card surface">
           <div className="flex items-start gap-3 bg-[#e8f2ff] px-4 py-3.5">
-            <Mail className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden />
+            <Mail className="mt-0.5 size-5 shrink-0 text-[#0071e3]" aria-hidden />
             <div className="min-w-0 text-[14px]">
-              <p className="font-semibold text-[#0b3a75]">
+              <p className="font-semibold text-[#005bb5]">
                 {result.emailDelivery === "live" ? "Confirmation e-mail sent" : "Confirmation e-mail ready"}
               </p>
-              <p className="truncate text-[#0b3a75]/80">
+              <p className="truncate text-[#0b1f3a]/70">
                 {result.emailDelivery === "live" ? `Check ${result.emailedTo} — we'll e-mail you at every step.` : `Addressed to ${result.emailedTo}. Demo mode: e-mail delivery isn't connected.`}
               </p>
               {result.emailPreviewUrl ? (
-                <a href={result.emailPreviewUrl} className="mt-1 inline-block font-medium text-primary hover:underline">
+                <a href={result.emailPreviewUrl} className="mt-1 inline-block font-medium text-[#0071e3] hover:underline">
                   View the e-mail →
                 </a>
               ) : null}
@@ -166,7 +175,7 @@ export function ReportForm({ qrSlug, assetName, locationAssets }: { qrSlug: stri
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="rise rise-1 space-y-5 rounded-[24px] bg-card p-5 surface" noValidate>
+    <form onSubmit={handleSubmit(onSubmit)} className="rise rise-1 space-y-5 rounded-xl bg-card p-5 surface" noValidate>
       {locationAssets.length > 0 ? (
         <div className="space-y-1.5">
           <Label htmlFor="selectedAssetId">Which equipment? (optional)</Label>
@@ -192,7 +201,7 @@ export function ReportForm({ qrSlug, assetName, locationAssets }: { qrSlug: stri
         {preview ? (
           <div className="relative">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={preview} alt="Selected photo preview" className="max-h-64 w-full rounded-2xl object-cover" />
+            <img src={preview} alt="Selected photo preview" className="max-h-64 w-full rounded-xl object-cover" />
             <Button
               type="button"
               size="icon-sm"
@@ -208,7 +217,7 @@ export function ReportForm({ qrSlug, assetName, locationAssets }: { qrSlug: stri
             </Button>
           </div>
         ) : (
-          <label className="flex cursor-pointer flex-col items-center justify-center gap-1.5 rounded-2xl bg-[#f2f2f5] p-6 text-[14px] text-primary transition-colors hover:bg-[#e8e8ed]">
+          <label className="flex cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl bg-[#f7f9fc] p-6 text-[14px] text-[#0071e3] transition-colors hover:bg-[#f1f3f6]">
             <Camera className="size-7" strokeWidth={1.6} aria-hidden /> <span className="font-medium">Take or choose a photo</span>
             <span className="text-xs text-muted-foreground">JPEG, PNG, WebP or GIF · up to 5 MB</span>
             <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" capture="environment" className="sr-only" onChange={(e) => pickPhoto(e.target.files?.[0])} />
@@ -237,7 +246,7 @@ export function ReportForm({ qrSlug, assetName, locationAssets }: { qrSlug: stri
       <p className="text-xs text-muted-foreground">We only use your email to send updates about this report. Staff handling the repair can see your name and email.</p>
 
       {serverError ? (
-        <p role="alert" className="rounded-xl bg-[#fff1f0] p-3 text-sm text-[#d70015]">
+        <p role="alert" className="rounded-xl bg-[#fef2f2] p-3 text-sm text-[#dc2626]">
           {serverError}
         </p>
       ) : null}

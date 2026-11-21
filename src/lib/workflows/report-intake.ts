@@ -12,7 +12,7 @@ import { detectDuplicate } from "@/lib/agents/duplicate-detector";
 import { recommendTriage } from "@/lib/agents/triage-router";
 import { recordAiRun } from "@/lib/ai/client";
 import type { Classification, DuplicateAssessment, ReportContext, SafetyAssessment, TriageRecommendation } from "@/lib/agents/schemas";
-import { combineSafety, evaluateSafetyRules, maxPriority, priorityFloorForSafety, type CombinedSafety } from "@/lib/safety/rules";
+import { adviceFor, combineSafety, evaluateSafetyRules, maxPriority, priorityFloorForSafety, type CombinedSafety } from "@/lib/safety/rules";
 import { retrieveCandidates } from "@/lib/duplicate-detection/candidates";
 import { decideLink, type LinkDecision } from "@/lib/duplicate-detection/decision";
 import { loadRoutingDirectory, resolveRouting, type RoutingDecision } from "@/lib/routing/router";
@@ -47,6 +47,8 @@ export interface SubmitReportResult {
   trackingUrl: string;
   aiMode: "live" | "mock";
   degraded: boolean;
+  hazards: string[];
+  safetyAdvice: string | null;
 }
 
 export class SubmissionError extends Error {
@@ -119,7 +121,7 @@ export async function submitReport(input: SubmitReportInput): Promise<SubmitRepo
   });
 
   // Notifications (student confirmation + caretakers). Failures are recorded, never fatal.
-  const tpl = reportReceived(await studentEmailContext(db, report.id, trackingUrl));
+  const tpl = reportReceived({ ...(await studentEmailContext(db, report.id, trackingUrl)), safetyAdvice: outcome.safetyAdvice });
   const notifications: Promise<unknown>[] = [
     sendNotification({
       audience: "student",
@@ -411,6 +413,8 @@ export async function processReport(db: SupabaseClient, p: ProcessInput) {
     routingReason: routing.reason,
     aiMode: mode,
     degraded: degradedReasons.length > 0,
+    hazards: safety.detected_hazards,
+    safetyAdvice: adviceFor(safety.detected_hazards),
   };
 }
 

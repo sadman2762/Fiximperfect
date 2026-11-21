@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { combineSafety, evaluateSafetyRules, maxPriority, priorityFloorForSafety } from "@/lib/safety/rules";
+import { adviceFor, combineSafety, evaluateSafetyRules, maxPriority, priorityFloorForSafety } from "@/lib/safety/rules";
 
 describe("deterministic safety rules", () => {
   it.each([
@@ -71,5 +71,46 @@ describe("combining rules with AI assessment", () => {
     expect(maxPriority("low", priorityFloorForSafety("critical"))).toBe("critical");
     expect(maxPriority("medium", priorityFloorForSafety("elevated"))).toBe("high");
     expect(maxPriority("high", priorityFloorForSafety("none"))).toBe("high");
+  });
+});
+
+describe("new emergency types", () => {
+  it.each([
+    ["There was an earthquake and the walls are cracked", "earthquake", "critical"],
+    ["The whole building is shaking", "earthquake", "critical"],
+    ["Water is pouring down the stairwell from the 3rd floor", "large_scale_flooding", "critical"],
+    ["The entire corridor is flooded and it's spreading to several rooms", "large_scale_flooding", "critical"],
+    ["Someone is stuck in the lift between floors 2 and 3", "person_trapped_in_lift", "critical"],
+    ["We are trapped inside the elevator", "person_trapped_in_lift", "critical"],
+    ["Power cut on the whole second floor", "power_outage", "elevated"],
+    ["The entire building is dark, no electricity since 8pm", "power_outage", "elevated"],
+    ["The lights keep flickering and the breaker keeps tripping", "power_surge", "elevated"],
+    ["There was a power surge and it fried my charger", "power_surge", "elevated"],
+    ["The fuse box went bang and there was a flash", "electrical_sparks", "critical"],
+  ] as const)("detects %s", (text, hazard, level) => {
+    const r = evaluateSafetyRules(text);
+    expect(r.hazards).toContain(hazard);
+    expect(r.level).toBe(level);
+  });
+
+  it.each([
+    "The stairs are wet after cleaning",
+    "The lift is out of order on floor 4",
+    "My desk lamp bulb is dead",
+    "There is a small damp patch in the basement corner",
+  ])("does not make an emergency of: %s", (text) => {
+    expect(evaluateSafetyRules(text).level).not.toBe("critical");
+  });
+
+  it("reports large-scale flooding instead of a plain leak or local flooding", () => {
+    const r = evaluateSafetyRules("Flooding across the whole floor, a pipe is leaking");
+    expect(r.hazards).toContain("large_scale_flooding");
+    expect(r.hazards).not.toContain("active_water_leak");
+    expect(r.hazards).not.toContain("serious_active_flooding");
+  });
+
+  it("returns the most urgent advice first, and nothing for hazards without advice", () => {
+    expect(adviceFor(["power_outage", "fire_or_smoke"])).toMatch(/leave the building/i);
+    expect(adviceFor(["broken_glass"])).toBeNull();
   });
 });

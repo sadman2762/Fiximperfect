@@ -48,6 +48,7 @@ export const POST = handleRoute(async (req: Request) => {
         category: result.category,
         priority: result.priority,
         safetyLevel: result.safetyLevel,
+        safetyAdvice: result.safetyAdvice,
         linkedReports: result.linkedReports,
         linkStatus: result.linkStatus,
         trackingUrl: result.trackingUrl,

@@ -48,6 +48,7 @@ export interface StudentEmailContext {
   critical?: boolean;
   linkedReports?: number;
   trackingUrl: string;
+  safetyAdvice?: string | null;
 }
 
 const FOOTER =
@@ -75,6 +76,7 @@ export function reportReceived(c: StudentEmailContext) {
       : `Thank you for reporting a problem with ${c.asset ?? c.area}. Your report ${c.reportNumber} is now maintenance ticket ${c.ticketNumber}.`;
   const notes = [
     c.critical ? "⚠️ This was flagged as a safety hazard and staff have been alerted. Please keep away from the area." : "",
+    c.safetyAdvice ? `What to do now: ${c.safetyAdvice}` : "",
     "You can follow the progress at any time with your personal tracking link. We will also e-mail you whenever the status changes.",
   ].filter(Boolean);
   return {
