@@ -51,7 +51,7 @@ const send = (method, params = {}) =>
 
 await send("Page.enable");
 await send("Network.enable");
-await send("Emulation.setDeviceMetricsOverride", { width, height: 900, deviceScaleFactor: 1, mobile: width < 500 });
+await send("Emulation.setDeviceMetricsOverride", { width, height: Number(process.env.VIEWPORT_HEIGHT ?? 900), deviceScaleFactor: Number(process.env.DPR ?? 1), mobile: width < 500 });
 if (cookie && cookie !== "-") {
   const [name, ...rest] = cookie.split("=");
   await send("Network.setCookie", { name, value: rest.join("="), url: BASE });
@@ -61,11 +61,12 @@ for (const p of paths) {
     const l = (m) => m.method === "Page.loadEventFired" && r();
     listeners.push(l);
   });
-  await send("Page.navigate", { url: BASE + p });
+  await send("Page.navigate", { url: /^(https?|file):/.test(p) ? p : BASE + p });
   await loaded;
   await new Promise((r) => setTimeout(r, 1500));
-  const { result } = await send("Page.captureScreenshot", { format: "png", captureBeyondViewport: true });
-  const file = path.join(outDir, `${p.replace(/[^a-z0-9]+/gi, "_").replace(/^_|_$/g, "") || "home"}-${width}.png`);
+  const fmt = process.env.FORMAT === "jpeg" ? "jpeg" : "png";
+  const { result } = await send("Page.captureScreenshot", { format: fmt, quality: fmt === "jpeg" ? 82 : undefined, captureBeyondViewport: !process.env.VIEWPORT_ONLY });
+  const file = path.join(outDir, process.env.NAME ?? `${p.replace(/[^a-z0-9]+/gi, "_").replace(/^_|_$/g, "") || "home"}-${width}.${fmt === "jpeg" ? "jpg" : "png"}`);
   fs.writeFileSync(file, Buffer.from(result.data, "base64"));
   console.log(file);
 }

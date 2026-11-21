@@ -136,7 +136,7 @@ export function PriorityControls({ ticketId, priority, critical }: { ticketId: s
           Update
         </Button>
       </div>
-      {critical && p !== "critical" ? <p className="text-xs text-[#b42323]">This is a critical safety ticket. Lowering the priority is recorded as a safety override.</p> : null}
+      {critical && p !== "critical" ? <p className="text-xs text-[#dc2626]">This is a critical safety ticket. Lowering the priority is recorded as a safety override.</p> : null}
     </div>
   );
 }

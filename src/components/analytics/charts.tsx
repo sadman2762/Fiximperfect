@@ -18,7 +18,7 @@ const tick = { fill: C.muted, fontSize: 12 };
 function TooltipBox({ active, payload, label }: { active?: boolean; payload?: { name: string; value: number; color: string }[]; label?: string }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-lg bg-card px-3 py-2 text-xs shadow-md surface">
+    <div className="rounded-xl border border-[#e1e5eb] bg-white px-3 py-2 text-xs text-[#0b1f3a] shadow-lg">
       <p className="mb-1 font-medium">{label}</p>
       {payload.map((p) => (
         <p key={p.name} className="flex items-center gap-2">

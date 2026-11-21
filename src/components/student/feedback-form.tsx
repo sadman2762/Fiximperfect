@@ -18,7 +18,7 @@ export function FeedbackForm({ token, initial }: { token: string; initial: "fixe
 
   if (state === "done") {
     return (
-      <p role="status" className="mt-4 rounded-lg bg-emerald-50 p-3 text-sm text-emerald-900">
+      <p role="status" className="mt-4 rounded-xl bg-[#f0fdf4] p-3 text-sm text-[#15803d]">
         {answer === "fixed" ? "Thank you for confirming the repair!" : "Thanks for telling us. The ticket has been reopened and the maintenance team has been notified."}
       </p>
     );
@@ -45,7 +45,7 @@ export function FeedbackForm({ token, initial }: { token: string; initial: "fixe
           role="radio"
           aria-checked={answer === "fixed"}
           onClick={() => setAnswer("fixed")}
-          className={cn("flex items-center justify-center gap-2 rounded-lg border p-3 text-sm font-medium", answer === "fixed" ? "border-emerald-600 bg-emerald-50 text-emerald-900" : "hover:bg-muted")}
+          className={cn("flex items-center justify-center gap-2 rounded-xl border p-3 text-sm font-medium", answer === "fixed" ? "border-[#16a34a] bg-[#f0fdf4] text-[#15803d]" : "hover:bg-muted")}
         >
           <CheckCircle2 className="size-5" aria-hidden /> Yes, fixed
         </button>
@@ -54,7 +54,7 @@ export function FeedbackForm({ token, initial }: { token: string; initial: "fixe
           role="radio"
           aria-checked={answer === "still_broken"}
           onClick={() => setAnswer("still_broken")}
-          className={cn("flex items-center justify-center gap-2 rounded-lg border p-3 text-sm font-medium", answer === "still_broken" ? "border-rose-600 bg-rose-50 text-rose-900" : "hover:bg-muted")}
+          className={cn("flex items-center justify-center gap-2 rounded-xl border p-3 text-sm font-medium", answer === "still_broken" ? "border-[#dc2626] bg-[#fef2f2] text-[#991b1b]" : "hover:bg-muted")}
         >
           <XCircle className="size-5" aria-hidden /> No, still broken
         </button>

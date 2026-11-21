@@ -1,5 +1,5 @@
 import "server-only";
-import { PROGRESS_STEPS, TONE_COLORS, type Progress } from "@/lib/tickets/progress";
+import { PROGRESS_STEPS, STEP_COLORS, TONE_COLORS, type Progress } from "@/lib/tickets/progress";
 
 /**
  * Parcel-tracking style transactional e-mail. Table layout + inline styles
@@ -40,14 +40,17 @@ function stepper(p: Progress): string {
   const c = TONE_COLORS[p.tone];
   const last = PROGRESS_STEPS.length - 1;
   // Segment k joins step k and k+1: solid once step k+1 is reached, dashed otherwise.
-  const seg = (k: number) => (k < 0 || k >= last ? "border-top:3px solid transparent" : k < p.step ? `border-top:3px solid ${c.accent}` : "border-top:3px dashed #c7c7cc");
+  const stepColor = (i: number) => (p.tone === "critical" ? c.accent : STEP_COLORS[PROGRESS_STEPS[i].key]);
+  // Segment k joins step k and k+1: solid in the colour of the step it reaches, dashed grey otherwise.
+  const seg = (k: number) => (k < 0 || k >= last ? "border-top:3px solid transparent" : k < p.step ? `border-top:3px solid ${stepColor(k + 1)}` : "border-top:3px dashed #c7c7cc");
   const cells = PROGRESS_STEPS.map((s, i) => {
     const done = i < p.step || (p.tone === "done" && i === p.step);
     const current = i === p.step && p.tone !== "done";
+    const sc = stepColor(i);
     const dot = done
-      ? `<div style="width:26px;height:26px;line-height:26px;border-radius:13px;background:${c.accent};color:#ffffff;font-size:14px;font-weight:700;text-align:center">&#10003;</div>`
+      ? `<div style="width:26px;height:26px;line-height:26px;border-radius:13px;background:${sc};color:#ffffff;font-size:14px;font-weight:700;text-align:center">&#10003;</div>`
       : current
-        ? `<div style="width:30px;height:30px;line-height:24px;border-radius:15px;background:#ffffff;border:3px solid ${c.accent};box-sizing:border-box;text-align:center"><span style="display:inline-block;width:10px;height:10px;border-radius:5px;background:${c.accent};vertical-align:middle"></span></div>`
+        ? `<div style="width:30px;height:30px;line-height:24px;border-radius:15px;background:#ffffff;border:3px solid ${sc};box-sizing:border-box;text-align:center"><span style="display:inline-block;width:10px;height:10px;border-radius:5px;background:${sc};vertical-align:middle"></span></div>`
         : `<div style="width:14px;height:14px;border-radius:7px;background:#ffffff;border:2px solid #c7c7cc;box-sizing:border-box"></div>`;
     return `<td width="20%" align="center" valign="top" style="padding:0">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="height:30px"><tr>
@@ -55,7 +58,7 @@ function stepper(p: Progress): string {
     <td style="vertical-align:middle;padding:0">${dot}</td>
     <td width="50%" style="vertical-align:middle;font-size:0;line-height:0"><div style="${seg(i)}"></div></td>
   </tr></table>
-  <div style="font-family:${FONT};font-size:11px;line-height:14px;margin-top:6px;color:${done || current ? c.ink : "#86868b"};font-weight:${current ? 700 : 500}">${esc(s.label)}</div>
+  <div style="font-family:${FONT};font-size:11px;line-height:14px;margin-top:6px;color:${done || current ? "#0b1f3a" : "#8a929e"};font-weight:${current ? 700 : 500}">${esc(s.label)}</div>
 </td>`;
   });
   return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>${cells.join("")}</tr></table>`;

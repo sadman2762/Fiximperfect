@@ -14,7 +14,7 @@ export function AssetNarrative({ assetId }: { assetId: string }) {
   return (
     <div className="mt-3">
       {n ? (
-        <div className="rounded-lg border p-3 text-sm">
+        <div className="rounded-xl border p-3 text-sm">
           <div className="mb-1 flex items-center gap-2">
             <p className="font-medium">AI interpretation of the records above</p>
             <AiModeBadge mode={n.mode} />

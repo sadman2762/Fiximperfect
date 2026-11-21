@@ -20,7 +20,7 @@ export default async function FeedbackPage({ params, searchParams }: { params: P
   else {
     const subject = fb.tickets.assets?.asset_name ?? fb.tickets.locations.area_name;
     body = (
-      <div className="rounded-2xl bg-card p-5 surface">
+      <div className="rounded-xl bg-card p-5 surface">
         <p className="text-xs text-muted-foreground">
           Ticket {fb.tickets.ticket_number} · your report {fb.reports.report_number}
         </p>
@@ -38,7 +38,7 @@ export default async function FeedbackPage({ params, searchParams }: { params: P
 
 function Message({ title, text }: { title: string; text: string }) {
   return (
-    <div className="rounded-2xl bg-card p-5 surface">
+    <div className="rounded-xl bg-card p-5 surface">
       <h1 className="font-semibold">{title}</h1>
       <p className="mt-1 text-sm text-muted-foreground">{text}</p>
     </div>

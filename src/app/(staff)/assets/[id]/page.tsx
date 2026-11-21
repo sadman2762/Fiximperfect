@@ -55,13 +55,13 @@ export default async function AssetPage({ params }: { params: Promise<{ id: stri
         <StatTile label="Age" value={s.age_years !== null ? `${s.age_years} y` : "—"} hint={s.expected_useful_life_years ? `expected life ${s.expected_useful_life_years} y` : undefined} />
       </section>
 
-      <section className="mt-4 rounded-2xl bg-card p-4 surface">
+      <section className="mt-4 rounded-xl bg-card p-4 surface">
         <div className="flex flex-wrap items-center gap-2">
           <h2 className="text-sm font-semibold">Recommendation</h2>
           <LevelBadge level={level} />
         </div>
         <p className="mt-2 text-sm">{deterministicRecommendation(s)}</p>
-        <div className="mt-3 rounded-lg bg-muted/50 p-3 text-xs">
+        <div className="mt-3 rounded-xl bg-muted/50 p-3 text-xs">
           <p className="font-medium">How this was calculated</p>
           <ul className="mt-1 list-disc space-y-0.5 pl-5">
             <li>
@@ -84,13 +84,13 @@ export default async function AssetPage({ params }: { params: Promise<{ id: stri
       </section>
 
       <div className="mt-4 grid gap-4 lg:grid-cols-2">
-        <section className="rounded-2xl bg-card p-4 surface">
+        <section className="rounded-xl bg-card p-4 surface">
           <h2 className="mb-3 text-sm font-semibold">Maintenance tickets</h2>
           <ul className="divide-y text-sm">
             {(tickets.data ?? []).map((t) => (
               <li key={t.id} className="flex flex-wrap items-center justify-between gap-2 py-2">
                 <div>
-                  <Link href={`/tickets/${t.id}`} className="font-mono text-xs text-primary hover:underline">
+                  <Link href={`/tickets/${t.id}`} className="font-mono text-xs text-[#0071e3] hover:underline">
                     {t.ticket_number}
                   </Link>{" "}
                   {t.title}
@@ -105,7 +105,7 @@ export default async function AssetPage({ params }: { params: Promise<{ id: stri
             ))}
           </ul>
         </section>
-        <section className="rounded-2xl bg-card p-4 surface">
+        <section className="rounded-xl bg-card p-4 surface">
           <h2 className="mb-3 text-sm font-semibold">Expenditure records</h2>
           <table className="w-full text-sm">
             <thead className="text-left text-xs text-muted-foreground">

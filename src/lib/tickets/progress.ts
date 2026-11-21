@@ -50,12 +50,21 @@ export function progressFor(status: TicketStatus | null | undefined, opts: { ver
   }
 }
 
-/** Colours per tone, used by the e-mail (inline styles) and the web tracker. */
+/** Status colour of each progress step (brand palette). */
+export const STEP_COLORS: Record<(typeof PROGRESS_STEPS)[number]["key"], string> = {
+  received: "#64748b",
+  assigned: "#0071e3",
+  repair: "#d97706",
+  fixed: "#16a34a",
+  confirmed: "#0b1f3a",
+};
+
+/** Band / ink / accent per tone — shared by the e-mails and the tracking page. */
 export const TONE_COLORS: Record<ProgressTone, { band: string; ink: string; accent: string }> = {
-  info: { band: "#e8f2ff", ink: "#0b3a75", accent: "#0071e3" },
-  progress: { band: "#eef0ff", ink: "#2b2a7a", accent: "#5e5ce6" },
-  warning: { band: "#fff4e0", ink: "#7a4300", accent: "#c93400" },
-  success: { band: "#e4f8e9", ink: "#14532d", accent: "#248a3d" },
-  done: { band: "#e4f8e9", ink: "#14532d", accent: "#248a3d" },
-  critical: { band: "#ffe9e7", ink: "#7f0d0d", accent: "#d70015" },
+  info: { band: "#e8f2ff", ink: "#0b1f3a", accent: "#0071e3" },
+  progress: { band: "#fff7ed", ink: "#0b1f3a", accent: "#d97706" },
+  warning: { band: "#fff7ed", ink: "#0b1f3a", accent: "#d97706" },
+  success: { band: "#f0fdf4", ink: "#0b1f3a", accent: "#16a34a" },
+  done: { band: "#e8f2ff", ink: "#0b1f3a", accent: "#0b1f3a" },
+  critical: { band: "#fef2f2", ink: "#7f1d1d", accent: "#dc2626" },
 };

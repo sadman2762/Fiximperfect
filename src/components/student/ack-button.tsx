@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 
 export function AckButton({ token }: { token: string }) {
   const [state, setState] = useState<"idle" | "sending" | "done" | "error">("idle");
-  if (state === "done") return <p className="mt-4 rounded-lg bg-emerald-50 p-3 text-sm text-emerald-900">Acknowledged. Escalation to backup contacts has stopped.</p>;
+  if (state === "done") return <p className="mt-4 rounded-xl bg-[#f0fdf4] p-3 text-sm text-[#15803d]">Acknowledged. Escalation to backup contacts has stopped.</p>;
   return (
     <div className="mt-4">
       <Button

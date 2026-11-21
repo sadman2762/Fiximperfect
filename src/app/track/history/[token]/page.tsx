@@ -19,7 +19,7 @@ export default async function HistoryPage({ params }: { params: Promise<{ token:
           ))}
         </>
       ) : (
-        <div className="rounded-2xl bg-card p-5 surface">
+        <div className="rounded-xl bg-card p-5 surface">
           <h1 className="font-semibold">Link not valid</h1>
           <p className="mt-1 text-sm text-muted-foreground">This link is invalid or has expired. Request a new one from the “My reports” page.</p>
         </div>

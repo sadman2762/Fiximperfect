@@ -10,7 +10,7 @@ export function AcknowledgeButton({ ticketId }: { ticketId: string }) {
   return (
     <button
       disabled={busy}
-      className="rounded-lg bg-white px-3 py-1.5 text-sm font-semibold text-[#b42323] hover:bg-white/90 disabled:opacity-60"
+      className="rounded-xl bg-white px-3 py-1.5 text-sm font-semibold text-[#aa0014] hover:bg-white/90 disabled:opacity-60"
       onClick={async () => {
         setBusy(true);
         const res = await fetch(`/api/tickets/${ticketId}/acknowledge`, { method: "POST" });

@@ -40,6 +40,13 @@ beforeAll(async () => {
   await seedDemo();
 });
 
+/** True when the server delivered (or tried to deliver) real e-mail instead of simulating it. */
+async function emailIsLive(ticketId: string) {
+  const { data } = await db().from("notifications").select("delivery_status").eq("ticket_id", ticketId).eq("notification_type", "resolution_confirmation_request");
+  return (data ?? []).length > 0 && (data ?? []).every((n) => n.delivery_status !== "simulated");
+}
+let liveEmail = false;
+
 describe("student → caretaker → student journey over HTTP", () => {
   let ticketId = "";
   let trackingUrl = "";
@@ -89,7 +96,7 @@ describe("student → caretaker → student journey over HTTP", () => {
     expect(await page.text()).toContain("Linked reports (3 reports from 3 students)");
   });
 
-  it("caretaker records a cost and resolves; each reporter gets their own feedback link", async () => {
+  it("caretaker records a cost and resolves; each reporter gets their own feedback link", async (ctx) => {
     const ct = await staffCookie("caretaker@fiximperfect.example");
     const cost = await post(`/api/tickets/${ticketId}/cost`, { partsCost: "18.40", labourCost: "35", otherCost: "0", currency: "EUR", expenseDate: "2026-11-20", total: "1.00" }, ct);
     expect(cost.status).toBe(200);
@@ -98,10 +105,15 @@ describe("student → caretaker → student journey over HTTP", () => {
     expect(bad.status).toBe(422); // in_progress -> closed is not a valid transition
     expect((await post(`/api/tickets/${ticketId}/status`, { status: "resolved", note: "Latch replaced" }, ct)).status).toBe(200);
     const tokens = await feedbackTokensFromOutbox(ticketId);
+    if (tokens.size === 0 && (await emailIsLive(ticketId))) {
+      liveEmail = true;
+      ctx.skip(); // links went to real inboxes (RESEND_API_KEY set on the server)
+    }
     expect(tokens.size).toBe(3);
   });
 
-  it("two students confirm, one says still broken → ticket reopens", async () => {
+  it("two students confirm, one says still broken → ticket reopens", async (ctx) => {
+    if (liveEmail) ctx.skip(); // needs simulated e-mail to read the feedback links
     const tokens = await feedbackTokensFromOutbox(ticketId);
     const page = await (await fetch(`${BASE}/feedback/${tokens.get("e2e.a@students.fiximperfect.example")}?answer=fixed`)).text();
     expect(page).toContain("Is the problem actually fixed?"); // GET never records an answer

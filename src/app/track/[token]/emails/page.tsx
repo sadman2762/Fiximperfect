@@ -32,18 +32,18 @@ export default async function StudentEmailsPage({ params }: { params: Promise<{ 
 
   return (
     <StudentShell>
-      <Link href={`/track/${token}`} className="inline-flex items-center gap-1 text-[14px] text-primary hover:underline">
+      <Link href={`/track/${token}`} className="inline-flex items-center gap-1 text-[14px] text-[#0071e3] hover:underline">
         <ArrowLeft className="size-4" aria-hidden /> Back to tracking
       </Link>
       {!view || !enabled ? (
-        <div className="rounded-2xl bg-card p-5 surface">
+        <div className="rounded-xl bg-card p-5 surface">
           <h1 className="font-semibold">Not available</h1>
           <p className="mt-1 text-sm text-muted-foreground">E-mails are delivered to your inbox.</p>
         </div>
       ) : (
         <>
           <div className="rise text-center">
-            <span className="mx-auto grid size-14 place-items-center rounded-2xl bg-gradient-to-br from-[#2997ff] to-[#0071e3] text-white">
+            <span className="mx-auto grid size-14 place-items-center rounded-xl bg-gradient-to-br from-[#2997ff] to-[#0071e3] text-white">
               <Inbox className="size-7" aria-hidden />
             </span>
             <h1 className="mt-4 text-[26px] font-bold tracking-[-0.03em]">Your e-mails</h1>
@@ -52,7 +52,7 @@ export default async function StudentEmailsPage({ params }: { params: Promise<{ 
             </p>
           </div>
           {(emails ?? []).map((m, i) => (
-            <details key={m.id} open={i === 0} className="rise overflow-hidden rounded-[22px] bg-card surface">
+            <details key={m.id} open={i === 0} className="rise overflow-hidden rounded-xl bg-card surface">
               <summary className="flex cursor-pointer list-none items-center gap-3 px-4 py-3.5">
                 <span className="grid size-9 shrink-0 place-items-center rounded-full bg-[#0b1f3a] text-[13px] font-bold text-[#ffd60a]">F.</span>
                 <span className="min-w-0 flex-1">
@@ -67,10 +67,10 @@ export default async function StudentEmailsPage({ params }: { params: Promise<{ 
                   title={m.subject ?? "E-mail"}
                   srcDoc={m.body_html}
                   sandbox="allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation"
-                  className="h-[860px] w-full border-t border-black/[0.06] bg-[#f5f5f7]"
+                  className="h-[860px] w-full border-t border-[#e1e5eb] bg-[#f7f9fc]"
                 />
               ) : (
-                <p className="border-t border-black/[0.06] px-4 py-3 text-sm text-muted-foreground">This e-mail was delivered to your inbox.</p>
+                <p className="border-t border-[#e1e5eb] px-4 py-3 text-sm text-muted-foreground">This e-mail was delivered to your inbox.</p>
               )}
             </details>
           ))}

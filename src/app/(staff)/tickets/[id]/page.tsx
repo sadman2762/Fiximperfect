@@ -17,7 +17,7 @@ export const metadata: Metadata = { title: "Ticket" };
 
 function Card({ title, children, actions }: { title: string; children: React.ReactNode; actions?: React.ReactNode }) {
   return (
-    <section className="rounded-[22px] bg-card p-5 surface">
+    <section className="rounded-xl bg-card p-5 surface">
       <div className="mb-3 flex items-center justify-between gap-2">
         <h2 className="text-[15px] font-semibold">{title}</h2>
         {actions}
@@ -117,7 +117,7 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
               {ticket.buildings.name}, floor {ticket.locations.floor}, {ticket.locations.area_name}
             </span>
             {ticket.assets ? (
-              <Link href={`/assets/${ticket.assets.id}`} className="text-primary hover:underline">
+              <Link href={`/assets/${ticket.assets.id}`} className="text-[#0071e3] hover:underline">
                 {ticket.assets.asset_name} ({ticket.assets.asset_code})
               </Link>
             ) : null}
@@ -126,7 +126,7 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
       />
 
       {openAlert ? (
-        <div className="mb-4 flex items-center gap-3 rounded-[22px] bg-gradient-to-br from-[#ff453a] to-[#d70015] p-5 text-white shadow-[0_16px_40px_-16px_rgba(215,0,21,0.65)]">
+        <div className="mb-4 flex items-center gap-3 rounded-xl bg-gradient-to-br from-[#ff453a] to-[#d70015] p-5 text-white shadow-[0_16px_40px_-16px_rgba(215,0,21,0.65)]">
           <ShieldAlert className="size-5" aria-hidden />
           <p className="flex-1 text-sm">
             <strong>Critical safety issue.</strong> {ticket.safety_reason} Escalation status: {ticket.escalation_status}.
@@ -136,9 +136,9 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
       ) : null}
 
       {ticket.status === "needs_review" && ticket.needs_review_reason ? (
-        <div className="mb-4 rounded-xl bg-violet-50 p-4 ring-1 ring-violet-200">
-          <p className="text-sm font-medium text-violet-900">Needs caretaker review</p>
-          <p className="mt-1 text-sm text-violet-900">{ticket.needs_review_reason}</p>
+        <div className="mb-4 rounded-xl bg-[#eef2ff] p-4 ring-1 ring-[#c7d2fe]">
+          <p className="text-sm font-medium text-[#4338ca]">Needs caretaker review</p>
+          <p className="mt-1 text-sm text-[#4338ca]">{ticket.needs_review_reason}</p>
           {coordinator && reportRows.some((r) => r.link_status === "pending_review") ? (
             <div className="mt-3">
               <DuplicateReviewControls ticketId={ticket.id} suggested={suggested ?? null} />
@@ -147,9 +147,9 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
         </div>
       ) : null}
       {ticket.merged_into ? (
-        <p className="mb-4 rounded-lg bg-slate-100 p-3 text-sm">
+        <p className="mb-4 rounded-xl bg-[#f1f3f6] p-3 text-sm">
           This ticket was merged.{" "}
-          <Link className="text-primary underline" href={`/tickets/${ticket.merged_into}`}>
+          <Link className="text-[#0071e3] underline" href={`/tickets/${ticket.merged_into}`}>
             Open the surviving ticket
           </Link>
         </p>
@@ -157,10 +157,10 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
 
       <div className="grid gap-4 lg:grid-cols-3">
         <div className="space-y-4 lg:col-span-2">
-          <Card title={`Linked reports (${reportRows.length} reports from ${uniqueReporters} student${uniqueReporters === 1 ? "" : "s"})`}>
+          <Card title={`Linked reports (${reportRows.length} report${reportRows.length === 1 ? "" : "s"} from ${uniqueReporters} student${uniqueReporters === 1 ? "" : "s"})`}>
             <ol className="space-y-4">
               {reportRows.map((r) => (
-                <li key={r.id} className="rounded-2xl bg-[#f7f7f9] p-4">
+                <li key={r.id} className="rounded-xl bg-[#f7f9fc] p-4">
                   <div className="flex flex-wrap items-baseline justify-between gap-2">
                     <p className="text-sm">
                       <span className="font-mono text-xs">{r.report_number}</span> · <strong>{r.reporter_name}</strong> <span className="text-muted-foreground">{r.reporter_email}</span>
@@ -175,7 +175,7 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
                   {r.image_path ? (
                     <a href={`/api/reports/${r.id}/image`} target="_blank" rel="noreferrer" className="mt-2 block w-fit">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={`/api/reports/${r.id}/image`} alt={`Photo from ${r.report_number}`} className="max-h-60 rounded-lg surface" />
+                      <img src={`/api/reports/${r.id}/image`} alt={`Photo from ${r.report_number}`} className="max-h-60 rounded-xl surface" />
                     </a>
                   ) : (
                     <p className="mt-2 inline-flex items-center gap-1 text-xs text-muted-foreground">
@@ -183,7 +183,7 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
                     </p>
                   )}
                   <details className="mt-3" open={reportRows.length === 1 || r === reportRows[reportRows.length - 1]}>
-                    <summary className="cursor-pointer text-xs font-medium text-primary">AI analysis &amp; reasoning</summary>
+                    <summary className="cursor-pointer text-xs font-medium text-[#0071e3]">AI analysis &amp; reasoning</summary>
                     <div className="mt-2">
                       <AiAnalysisPanel analysis={r.ai_analysis} />
                     </div>
@@ -197,7 +197,7 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
             <NoteForm ticketId={ticket.id} />
             <ol className="mt-5 space-y-3.5">
               {(events.data ?? []).map((e) => (
-                <li key={e.id} className="relative pl-6 text-sm before:absolute before:top-[7px] before:left-[3px] before:size-2 before:rounded-full before:bg-[#c7c7cc] after:absolute after:top-4 after:bottom-[-14px] after:left-[6.5px] after:w-px after:bg-black/[0.08] last:after:hidden">
+                <li key={e.id} className="relative pl-6 text-sm before:absolute before:top-[7px] before:left-[3px] before:size-2 before:rounded-full before:bg-[#c7c7cc] after:absolute after:top-4 after:bottom-[-14px] after:left-[6.5px] after:w-px after:bg-white/10 last:after:hidden">
                   <p>
                     <strong>{EVENT_LABEL[e.event_type] ?? e.event_type}</strong>
                     {e.old_value || e.new_value ? (
@@ -254,7 +254,7 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
                   {currentFeedback.map((f) => (
                     <li key={f.id} className="flex justify-between gap-2">
                       <span className="truncate">{f.reporter_email}</span>
-                      <span className={f.response === "fixed" ? "text-emerald-700" : f.response === "still_broken" ? "text-rose-700" : "text-muted-foreground"}>
+                      <span className={f.response === "fixed" ? "text-[#15803d]" : f.response === "still_broken" ? "text-[#dc2626]" : "text-muted-foreground"}>
                         {f.response === "fixed" ? "Fixed" : f.response === "still_broken" ? "Still broken" : "Awaiting"}
                       </span>
                     </li>
@@ -301,13 +301,13 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
             <Card title="Emergency alerts">
               <ul className="space-y-2 text-sm">
                 {(alerts.data ?? []).map((a) => (
-                  <li key={a.id} className="rounded-xl bg-[#f7f7f9] p-3">
+                  <li key={a.id} className="rounded-xl bg-[#f7f9fc] p-3">
                     <p>
                       Attempt {a.escalation_attempt} · {a.recipient_name} · {a.channel}
                     </p>
                     <div className="mt-1 flex flex-wrap items-center gap-2 text-xs">
                       <DeliveryBadge status={a.delivery_status} />
-                      {a.acknowledged_at ? <span className="text-emerald-700">Acknowledged {formatDate(a.acknowledged_at)}</span> : <span className="text-muted-foreground">Escalates after {formatDate(a.escalate_after)}</span>}
+                      {a.acknowledged_at ? <span className="text-[#15803d]">Acknowledged {formatDate(a.acknowledged_at)}</span> : <span className="text-muted-foreground">Escalates after {formatDate(a.escalate_after)}</span>}
                     </div>
                   </li>
                 ))}
@@ -317,7 +317,7 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
           <Card title={`Notifications (${(notifications.data ?? []).length})`}>
             <ul className="space-y-2.5 text-xs">
               {(notifications.data ?? []).slice(0, 6).map((n) => (
-                <li key={n.id} className="flex flex-col gap-1">
+                <li key={n.id} className="flex flex-col items-start gap-1">
                   <span className="text-[13px]">
                     {n.notification_type.replace(/_/g, " ")} <span className="text-muted-foreground">→ {n.recipient}</span>
                   </span>
@@ -327,10 +327,10 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
             </ul>
             {(notifications.data ?? []).length > 6 ? (
               <details className="mt-3 text-xs">
-                <summary className="cursor-pointer font-medium text-primary">Show {(notifications.data ?? []).length - 6} more</summary>
+                <summary className="cursor-pointer font-medium text-[#0071e3]">Show {(notifications.data ?? []).length - 6} more</summary>
                 <ul className="mt-2 space-y-2.5">
                   {(notifications.data ?? []).slice(6).map((n) => (
-                    <li key={n.id} className="flex flex-col gap-1">
+                    <li key={n.id} className="flex flex-col items-start gap-1">
                       <span className="text-[13px]">
                         {n.notification_type.replace(/_/g, " ")} <span className="text-muted-foreground">→ {n.recipient}</span>
                       </span>

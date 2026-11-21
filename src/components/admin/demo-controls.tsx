@@ -23,7 +23,7 @@ export function DemoControls() {
     <div className="space-y-3">
       <div className="grid gap-2 md:grid-cols-2">
         {ACTIONS.map((a) => (
-          <div key={a.key} className="flex items-start justify-between gap-3 rounded-lg border p-3">
+          <div key={a.key} className="flex items-start justify-between gap-3 rounded-xl border p-3">
             <div>
               <p className="text-sm font-medium">{a.label}</p>
               <p className="text-xs text-muted-foreground">{a.hint}</p>
@@ -50,7 +50,7 @@ export function DemoControls() {
         ))}
       </div>
       {out ? (
-        <details open className="rounded-lg bg-muted/50 p-3">
+        <details open className="rounded-xl bg-muted/50 p-3">
           <summary className="cursor-pointer text-xs font-medium">Result of “{out.key}” (from the real workflow services)</summary>
           <pre className="mt-2 max-h-80 overflow-auto text-xs">{JSON.stringify(out.body, null, 2)}</pre>
         </details>

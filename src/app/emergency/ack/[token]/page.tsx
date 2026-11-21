@@ -26,10 +26,10 @@ export default async function AckPage({ params }: { params: Promise<{ token: str
   return (
     <StudentShell>
       {!alert ? (
-        <p className="rounded-2xl bg-card p-5 surface">This acknowledgement link is not valid.</p>
+        <p className="rounded-xl bg-card p-5 surface">This acknowledgement link is not valid.</p>
       ) : (
-        <div className="rounded-2xl bg-card p-5 surface">
-          <div className="flex items-center gap-2 text-[#b42323]">
+        <div className="rounded-xl bg-card p-5 surface">
+          <div className="flex items-center gap-2 text-[#dc2626]">
             <ShieldAlert className="size-5" aria-hidden />
             <h1 className="font-semibold">Safety alert {alert.tickets.ticket_number}</h1>
           </div>
@@ -39,7 +39,7 @@ export default async function AckPage({ params }: { params: Promise<{ token: str
           </p>
           {alert.tickets.safety_reason ? <p className="mt-3 text-sm">{alert.tickets.safety_reason}</p> : null}
           {alert.acknowledged_at ? (
-            <p className="mt-4 rounded-lg bg-emerald-50 p-3 text-sm text-emerald-900">Already acknowledged{alert.acknowledged_by ? ` by ${alert.acknowledged_by}` : ""}.</p>
+            <p className="mt-4 rounded-xl bg-[#f0fdf4] p-3 text-sm text-[#15803d]">Already acknowledged{alert.acknowledged_by ? ` by ${alert.acknowledged_by}` : ""}.</p>
           ) : (
             <AckButton token={token} />
           )}

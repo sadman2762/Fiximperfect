@@ -57,14 +57,14 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           </Link>
         }
       />
-      {denied ? <p className="mb-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-900">You do not have access to that page.</p> : null}
+      {denied ? <p className="mb-4 rounded-xl bg-[#fff7ed] p-3 text-sm text-[#b45309]">You do not have access to that page.</p> : null}
 
       {(emergencies as unknown as Emergency[] | null)?.length ? (
         <section aria-label="Active emergencies" className="mb-6 space-y-3">
           {(emergencies as unknown as Emergency[]).map((e) => {
             const latest = [...e.emergency_alerts].sort((a, b) => b.escalation_attempt - a.escalation_attempt)[0];
             return (
-              <div key={e.id} className="flex flex-col gap-3 rounded-[22px] bg-gradient-to-br from-[#ff453a] to-[#d70015] p-5 text-white shadow-[0_16px_40px_-16px_rgba(215,0,21,0.65)] sm:flex-row sm:items-center">
+              <div key={e.id} className="flex flex-col gap-3 rounded-xl bg-gradient-to-br from-[#ff453a] to-[#d70015] p-5 text-white shadow-[0_16px_40px_-16px_rgba(215,0,21,0.65)] sm:flex-row sm:items-center">
                 <ShieldAlert className="size-6 shrink-0" aria-hidden />
                 <div className="flex-1 text-sm">
                   <p className="font-semibold">
@@ -82,7 +82,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
                   </p>
                 </div>
                 <div className="flex gap-2">
-                  <Link href={`/tickets/${e.id}`} className="rounded-lg bg-white/15 px-3 py-1.5 text-sm font-medium hover:bg-white/25">
+                  <Link href={`/tickets/${e.id}`} className="rounded-xl bg-white/15 px-3 py-1.5 text-sm font-medium hover:bg-white/25">
                     Open
                   </Link>
                   {canAck ? <AcknowledgeButton ticketId={e.id} /> : null}

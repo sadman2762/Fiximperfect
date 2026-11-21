@@ -7,14 +7,14 @@ export const metadata: Metadata = {
   description: "AI-coordinated dormitory maintenance and asset intelligence.",
 };
 
-export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: "#0f766e" };
+export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: "#0b1f3a" };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
       <body className="min-h-dvh antialiased">
         {children}
-        <Toaster richColors position="top-right" />
+        <Toaster richColors position="top-right" toastOptions={{ style: { borderRadius: 14 } }} />
       </body>
     </html>
   );

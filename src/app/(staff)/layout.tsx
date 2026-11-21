@@ -17,10 +17,10 @@ export default async function StaffLayout({ children }: { children: React.ReactN
           {demo ? (
             <div className="mb-6 flex justify-end">
               <span
-                className="inline-flex items-center gap-1.5 rounded-full bg-white/80 px-3 py-1 text-xs text-[#6e6e73] surface"
+                className="inline-flex items-center gap-1.5 rounded-full border border-[#fed7aa] bg-[#fff7ed] px-3 py-1 text-[12px] text-[#b45309]"
                 title="Simulated messages are recorded but never sent. Mock AI decisions are labelled wherever they appear."
               >
-                <FlaskConical className="size-3.5 text-[#c93400]" aria-hidden />
+                <FlaskConical className="size-3.5" aria-hidden />
                 Demo mode · AI {providers.ai === "live" ? "live" : providers.ai === "mock" ? "mock fixtures" : "missing key"} · email {providers.email} · SMS & voice {providers.sms}
               </span>
             </div>

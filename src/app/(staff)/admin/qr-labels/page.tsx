@@ -30,7 +30,7 @@ export default async function QrLabelsPage() {
       </div>
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 print:grid-cols-3">
         {labels.map((l, i) => (
-          <div key={l.slug} className="break-inside-avoid rounded-lg border-2 border-dashed p-3 text-center">
+          <div key={l.slug} className="break-inside-avoid rounded-xl border-2 border-dashed p-3 text-center">
             <p className="text-sm font-bold">Something broken?</p>
             <p className="text-xs">Scan to report — no login needed</p>
             <div className="mx-auto my-2 w-36" dangerouslySetInnerHTML={{ __html: svgs[i] }} />

@@ -16,13 +16,13 @@ export default async function TrackPage({ params }: { params: Promise<{ token: s
       {view ? (
         <TrackingCard view={view} emailsHref={env().DEMO_TOOLS_ENABLED === "true" ? `/track/${token}/emails` : null} />
       ) : (
-        <div className="rounded-2xl bg-card p-5 surface">
+        <div className="rounded-xl bg-card p-5 surface">
           <h1 className="font-semibold">Link not valid</h1>
           <p className="mt-1 text-sm text-muted-foreground">This tracking link is invalid or has expired.</p>
         </div>
       )}
       <p className="text-center text-sm">
-        <Link href="/track" className="text-primary underline-offset-4 hover:underline">
+        <Link href="/track" className="text-[#0071e3] underline-offset-4 hover:underline">
           See all my reports
         </Link>
       </p>

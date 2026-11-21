@@ -28,8 +28,8 @@ function Confidence({ value }: { value: number }) {
   const pct = Math.round(value * 100);
   return (
     <span className="inline-flex items-center gap-2">
-      <span className="h-1.5 w-20 overflow-hidden rounded-full bg-muted" aria-hidden>
-        <span className="block h-full rounded-full bg-primary" style={{ width: `${pct}%` }} />
+      <span className="h-1 w-20 overflow-hidden bg-white/10" aria-hidden>
+        <span className="block h-full bg-[#0071e3]" style={{ width: `${pct}%` }} />
       </span>
       <span className="text-xs tabular-nums">{pct}%</span>
     </span>
@@ -38,7 +38,7 @@ function Confidence({ value }: { value: number }) {
 
 function Section({ icon: Icon, title, children }: { icon: typeof Bot; title: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-xl bg-white p-3.5 surface">
+    <div className="border border-[#e1e5eb] bg-[#f7f9fc] p-3.5">
       <p className="mb-2 flex items-center gap-1.5 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
         <Icon className="size-3.5" aria-hidden /> {title}
       </p>
@@ -68,7 +68,7 @@ export function AiAnalysisPanel({ analysis }: { analysis: Analysis | null }) {
         {analysis.model ? <span className="text-xs text-muted-foreground">Model: {analysis.model}</span> : null}
       </div>
       {analysis.degraded?.length ? (
-        <p className="rounded-lg bg-amber-50 p-2 text-xs text-amber-900">Fallbacks used: {analysis.degraded.join("; ")}</p>
+        <p className="rounded-xl bg-[#fff7ed] p-2 text-xs text-[#b45309]">Fallbacks used: {analysis.degraded.join("; ")}</p>
       ) : null}
       <div className="grid gap-3 lg:grid-cols-2">
         <Section icon={Eye} title="Vision & classification">
@@ -102,7 +102,7 @@ export function AiAnalysisPanel({ analysis }: { analysis: Analysis | null }) {
           {s ? (
             <>
               <p>
-                Level: <strong className={s.safety_level === "critical" ? "text-[#b42323]" : ""}>{s.safety_level}</strong>
+                Level: <strong className={s.safety_level === "critical" ? "text-[#dc2626]" : ""}>{s.safety_level}</strong>
               </p>
               <p className="text-xs text-muted-foreground">
                 Decided by: {DECIDED[s.decided_by] ?? s.decided_by} (rules: {s.rule_level}, AI: {s.ai_level ?? "n/a"})

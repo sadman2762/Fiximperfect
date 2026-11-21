@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BarChart3, Boxes, LayoutGrid, LogOut, Settings2, Ticket } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { AppMark } from "@/components/shared/app-mark";
+import { AppMark, Wordmark } from "@/components/shared/app-mark";
 import type { StaffRole } from "@/types/domain";
 
 const NAV: { href: string; label: string; Icon: typeof Ticket; roles: StaffRole[] }[] = [
@@ -33,16 +33,18 @@ function initials(name: string) {
     .toUpperCase();
 }
 
+/** Navy sidebar (desktop) / navy top bar (mobile). */
 export function StaffNav({ staff }: { staff: { full_name: string; role: StaffRole } }) {
   const path = usePathname();
   const items = NAV.filter((n) => n.roles.includes(staff.role));
   return (
-    <aside className="glass sticky top-0 z-30 border-b border-black/[0.06] md:h-dvh md:w-64 md:shrink-0 md:border-r md:border-b-0">
+    <aside className="navy sticky top-0 z-30 md:h-dvh md:w-64 md:shrink-0">
       <div className="flex h-full flex-col">
-        <Link href="/dashboard" className="flex items-center gap-2.5 px-5 pt-4 pb-3 md:pt-7 md:pb-6">
-          <AppMark className="size-8" />
-          <span className="text-[17px] font-semibold tracking-tight">Fiximperfect</span>
+        <Link href="/dashboard" className="flex items-center gap-2.5 px-5 pt-4 pb-3 md:pt-7 md:pb-7">
+          <AppMark className="size-8 ring-white/20" />
+          <Wordmark onDark className="text-[18px]" />
         </Link>
+        <p className="hidden px-6 pb-2 text-[11px] font-semibold tracking-[0.08em] text-white/40 uppercase md:block">Workspace</p>
         <nav aria-label="Main" className="flex gap-1 overflow-x-auto px-3 pb-3 md:flex-col md:pb-0">
           {items.map(({ href, label, Icon }) => {
             const active = path === href || path.startsWith(`${href}/`);
@@ -52,27 +54,25 @@ export function StaffNav({ staff }: { staff: { full_name: string; role: StaffRol
                 href={href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex shrink-0 items-center gap-2.5 rounded-xl px-3 py-2 text-[14px] transition-colors",
-                  active ? "bg-black/[0.06] font-semibold text-foreground" : "text-[#424245] hover:bg-black/[0.035]",
+                  "flex shrink-0 items-center gap-3 rounded-xl px-3 py-2.5 text-[14px] transition-colors",
+                  active ? "bg-[#0071e3] font-medium text-white shadow-[0_6px_16px_-8px_rgba(0,113,227,0.9)]" : "text-white/70 hover:bg-white/[0.07] hover:text-white",
                 )}
               >
-                <Icon className={cn("size-[18px]", active ? "text-primary" : "text-[#86868b]")} strokeWidth={active ? 2.2 : 1.8} aria-hidden />
+                <Icon className="size-[18px]" strokeWidth={active ? 2.2 : 1.8} aria-hidden />
                 {label}
               </Link>
             );
           })}
         </nav>
         <div className="mt-auto hidden p-3 md:block">
-          <div className="flex items-center gap-3 rounded-2xl px-2 py-2.5">
-            <span className="grid size-9 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[#c7c7cc] to-[#8e8e93] text-[13px] font-semibold text-white">
-              {initials(staff.full_name)}
-            </span>
+          <div className="flex items-center gap-3 rounded-2xl bg-white/[0.06] px-3 py-3">
+            <span className="grid size-9 shrink-0 place-items-center rounded-full bg-[#e8f2ff] text-[12px] font-semibold text-[#0b1f3a]">{initials(staff.full_name)}</span>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-[13px] font-semibold">{staff.full_name.replace(/\s*\(.*?\)/, "")}</p>
-              <p className="text-xs text-muted-foreground">{ROLE_LABEL[staff.role]}</p>
+              <p className="truncate text-[13px] font-semibold text-white">{staff.full_name.replace(/\s*\(.*?\)/, "")}</p>
+              <p className="text-xs text-white/55">{ROLE_LABEL[staff.role]}</p>
             </div>
             <form action="/api/auth/logout" method="post">
-              <button className="grid size-8 place-items-center rounded-full text-[#86868b] hover:bg-black/5 hover:text-foreground" aria-label="Sign out" title="Sign out">
+              <button className="grid size-8 place-items-center rounded-lg text-white/60 hover:bg-white/10 hover:text-white" aria-label="Sign out" title="Sign out">
                 <LogOut className="size-4" aria-hidden />
               </button>
             </form>

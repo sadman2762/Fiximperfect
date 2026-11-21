@@ -14,7 +14,7 @@ export const metadata: Metadata = { title: "Management" };
 
 function Panel({ title, subtitle, children, className }: { title: string; subtitle?: string; children: React.ReactNode; className?: string }) {
   return (
-    <section className={`rounded-[22px] bg-card p-5 surface ${className ?? ""}`}>
+    <section className={`rounded-xl bg-card p-5 surface ${className ?? ""}`}>
       <h2 className="text-[15px] font-semibold">{title}</h2>
       {subtitle ? <p className="text-xs text-muted-foreground">{subtitle}</p> : null}
       <div className="mt-3">{children}</div>
@@ -57,9 +57,9 @@ export default async function AnalyticsPage({ searchParams }: { searchParams: Pr
         title="Insights"
         description="Operational and financial view. Every figure is computed in SQL from stored records."
         actions={
-          <nav aria-label="Time range" className="flex rounded-full bg-black/[0.05] p-1 text-[13px]">
+          <nav aria-label="Time range" className="flex border border-[#e1e5eb] bg-[#f1f3f6] p-1 text-[13px]">
             {ranges.map((r) => (
-              <Link key={r.label} href={r.key ? `/analytics?range=${r.key}` : "/analytics"} aria-current={range === r.key ? "page" : undefined} className={`rounded-full px-3.5 py-1 transition-colors ${range === r.key ? "bg-white font-semibold shadow-sm" : "text-muted-foreground hover:text-foreground"}`}>
+              <Link key={r.label} href={r.key ? `/analytics?range=${r.key}` : "/analytics"} aria-current={range === r.key ? "page" : undefined} className={`px-3.5 py-1 transition-colors ${range === r.key ? "bg-[#0071e3] font-medium text-white shadow-[0_0_18px_-4px_rgba(0,113,197,0.9)]" : "text-muted-foreground hover:text-foreground"}`}>
                 {r.label}
               </Link>
             ))}
@@ -82,15 +82,15 @@ export default async function AnalyticsPage({ searchParams }: { searchParams: Pr
         <StatTile label="Maintenance costs" value={money(o.costs_by_currency)} hint="currencies are never combined" />
       </section>
 
-      <section className="mt-6 rounded-[22px] bg-card p-5 surface">
+      <section className="mt-6 rounded-xl bg-card p-5 surface">
         <h2 className="text-[17px] font-semibold">Asset intelligence — replacement review</h2>
         <p className="text-xs text-muted-foreground">Rule: failures within the window ≥ threshold AND cumulative repair cost &gt; replacement cost. Decision support only.</p>
         {flagged.length ? (
           <ul className="mt-3 space-y-3">
             {flagged.map((a) => (
-              <li key={a.asset_id} className="rounded-2xl bg-[#f7f7f9] p-4">
+              <li key={a.asset_id} className="rounded-xl bg-[#f7f9fc] p-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <Link href={`/assets/${a.asset_id}`} className="font-medium text-primary hover:underline">
+                  <Link href={`/assets/${a.asset_id}`} className="font-medium text-[#0071e3] hover:underline">
                     {a.asset_name} · {a.building_name}
                   </Link>
                   <LevelBadge level={recommendationLevel(a)} />
@@ -98,7 +98,7 @@ export default async function AnalyticsPage({ searchParams }: { searchParams: Pr
                 <p className="mt-1 text-sm">{deterministicRecommendation(a)}</p>
                 <p className="mt-1 text-xs text-muted-foreground tabular-nums">
                   Age {a.age_years ?? "—"} y · {a.repair_count} repairs · repair ÷ replacement {a.repair_to_replacement_ratio ?? "—"}% ·{" "}
-                  <Link className="text-primary underline" href={`/assets/${a.asset_id}`}>
+                  <Link className="text-[#0071e3] underline" href={`/assets/${a.asset_id}`}>
                     view supporting records
                   </Link>
                 </p>

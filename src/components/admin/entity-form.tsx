@@ -91,7 +91,7 @@ export function EntityForm({
                   ))}
                 </NativeSelect>
               ) : f.type === "multi" ? (
-                <div className="flex flex-wrap gap-3 rounded-lg border p-2">
+                <div className="flex flex-wrap gap-3 rounded-xl border p-2">
                   {f.options.map((o) => {
                     const arr = (v[f.name] as string[]) ?? [];
                     return (
@@ -153,14 +153,14 @@ export function DeleteButton({ endpoint, id, label = "Delete" }: { endpoint: str
 export function EditToggle({ children, label = "Edit" }: { children: React.ReactNode; label?: string }) {
   const [open, setOpen] = useState(false);
   return open ? (
-    <div className="mt-2 rounded-lg border bg-muted/30 p-3">
+    <div className="mt-2 rounded-xl border bg-muted/30 p-3">
       {children}
       <button className="mt-2 text-xs text-muted-foreground hover:underline" onClick={() => setOpen(false)}>
         Cancel
       </button>
     </div>
   ) : (
-    <button className="text-xs text-primary hover:underline" onClick={() => setOpen(true)}>
+    <button className="text-xs text-[#0071e3] hover:underline" onClick={() => setOpen(true)}>
       {label}
     </button>
   );

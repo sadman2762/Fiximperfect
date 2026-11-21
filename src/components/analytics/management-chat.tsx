@@ -33,7 +33,7 @@ export function ManagementChat() {
   }
 
   return (
-    <section className="rounded-2xl bg-card p-4 surface">
+    <section className="rounded-xl bg-card p-4 surface">
       <h2 className="flex items-center gap-2 text-sm font-semibold">
         <MessageSquare className="size-4" aria-hidden /> Ask the management assistant
       </h2>
@@ -42,7 +42,7 @@ export function ManagementChat() {
         {turns.map((t, i) => (
           <div key={i} className="space-y-1.5 text-sm">
             <p className="font-medium">{t.q}</p>
-            <div className="rounded-lg bg-muted/50 p-3 whitespace-pre-line">{t.a}</div>
+            <div className="rounded-xl bg-muted/50 p-3 whitespace-pre-line">{t.a}</div>
             <p className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
               <AiModeBadge mode={t.mode} /> Tools used: {t.tools.map((x) => `${x.tool} (${x.rows} rows)`).join(", ") || "none"}
             </p>
@@ -52,7 +52,7 @@ export function ManagementChat() {
       {!turns.length ? (
         <div className="mt-3 flex flex-wrap gap-2">
           {SUGGESTIONS.map((s) => (
-            <button key={s} className="rounded-full border px-3 py-1 text-left text-xs hover:bg-muted" onClick={() => ask(s)} disabled={busy}>
+            <button key={s} className="border border-[#e1e5eb] bg-[#f7f9fc] px-3 py-1.5 text-left text-xs text-[#0b1f3a] hover:border-[#0071e3]/50 hover:bg-[#e8f2ff]" onClick={() => ask(s)} disabled={busy}>
               {s}
             </button>
           ))}
